@@ -1,5 +1,9 @@
 name: Deck Builder
 
+permissions:
+  contents: write
+  issues: write
+
 # Trigger on push or pull requests that modify .md files
 on:
   push:
@@ -29,17 +33,16 @@ jobs:
 
       # Install the presentation-skill
       - name: Install presentation-skill
+        env:
+          SKILL_DIR: ${{ runner.temp }}/presentation-skill
         run: |
-          # Download and extract the skill
-          curl -sL https://github.com/elbruno/md-to-slides/archive/main.tar.gz | tar xz --strip-components=1 --wildcards "*/skill" "*/templates" "*/examples"
-          
-          # Set up the skill directory
-          mkdir -p .copilot/skills/presentation-skill
-          mv skill/* templates examples .copilot/skills/presentation-skill/
-          rmdir skill 2>/dev/null || true
-          
+          rm -rf "$SKILL_DIR"
+          mkdir -p "$SKILL_DIR"
+          cp -R skill templates examples "$SKILL_DIR/"
+          echo "PRESENTATION_SKILL_DIR=$SKILL_DIR" >> "$GITHUB_ENV"
+
           # Verify installation
-          ls -la .copilot/skills/presentation-skill/
+          find "$SKILL_DIR" -maxdepth 2 -type f | sort
 
       # Detect markdown files that may need processing
       - name: Detect markdown files
@@ -83,15 +86,26 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          
-          # Check for any new slides.html files
-          if git status --porcelain | grep -q "slides.html"; then
-            git add '**/slides.html'
-            git commit -m "docs: auto-generated presentation decks [skip ci]" || echo "No changes to commit"
-            git push
-          else
+
+          mapfile -t generated_files < <(git ls-files -m -o --exclude-standard -- ':(glob)**/slides.html' ':(exclude).copilot/**' ':(exclude)node_modules/**')
+
+          if [ "${#generated_files[@]}" -eq 0 ]; then
             echo "No generated decks to commit"
+            exit 0
           fi
+
+          echo "Deck files queued for commit:"
+          printf '%s\n' "${generated_files[@]}"
+
+          git add -- "${generated_files[@]}"
+
+          if git diff --cached --quiet; then
+            echo "No meaningful deck changes to commit"
+            exit 0
+          fi
+
+          git commit -m "docs: auto-generated presentation decks [skip ci]"
+          git push
 
       # Optional: Comment on PR with deck links
       - name: Comment on PR with deck links

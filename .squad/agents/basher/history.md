@@ -229,3 +229,18 @@ Initial npm CLI package scaffolding for `md2slides` command-line tool to enable 
 - Git: `.squad/` changes staged and committed
 - Status: All workflows complete; team memory synchronized
 
+## Learnings — Deck Builder Workflow Fix (2026-04-21)
+
+**Task:** Repaired `.github/workflows/deck-builder.yml` so the setup stage no longer mutates tracked repo content and the optional deck commit only acts on real generated deck changes.
+
+**What changed:**
+- Copied `skill/`, `templates/`, and `examples/` into `${{ runner.temp }}/presentation-skill` instead of moving checked-out files into `.copilot/skills/presentation-skill`.
+- Added explicit workflow permissions: `contents: write` for the optional push-back path and `issues: write` to preserve PR deck comments.
+- Hardened the commit step to stage only `slides.html` paths reported by Git outside `.copilot/` and `node_modules/`, then exit cleanly when nothing meaningful is staged.
+
+**Verification:**
+- ✅ `npm test` passed before edits
+- ✅ `npm test` passed after edits
+- ✅ Workflow file committed and pushed to `main`
+- ✅ GitHub `main` now reflects the fixed workflow
+
