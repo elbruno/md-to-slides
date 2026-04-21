@@ -8,6 +8,8 @@ Give an AI agent a presentation brief or outline in Markdown. The skill generate
 
 ## Getting Started
 
+**Run these commands at the root of your project (the top-level directory of your repository).**
+
 ### Quick Install (Recommended)
 
 **macOS/Linux/WSL:**
@@ -20,7 +22,7 @@ curl -sL https://raw.githubusercontent.com/elbruno/md-to-slides/main/install.sh 
 powershell -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/elbruno/md-to-slides/main/install.ps1' -OutFile 'install.ps1'; & './install.ps1'; Remove-Item 'install.ps1'"
 ```
 
-Or clone the repo and run locally:
+Or clone the repo and run locally (from the repository root):
 ```bash
 # macOS/Linux/WSL
 ./install.sh
