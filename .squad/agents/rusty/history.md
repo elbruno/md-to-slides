@@ -30,7 +30,19 @@
 - **Team Coordination:** Linus completed templates; Basher completed packaging; Livingston completed QA docs
 - **Status:** All decisions merged into canonical `decisions.md`; inbox cleared
 
+### Deployment Options Implemented (2026-04-21 per Danny's UX Research) ✅
+- **install.sh** (macOS/Linux/WSL): Bash script downloads latest main, extracts to .copilot/skills/presentation-skill/, validates all required files, prints next-steps
+- **install.ps1** (Windows): PowerShell equivalent using native cmdlets (Invoke-WebRequest, Expand-Archive, etc.)
+- **GitHub Actions Workflow** (.github/workflows/deck-builder.yml): Triggers on PR/push with *.md changes; auto-installs skill; detects markdown files; validates output; commits slides; comments on PR with deck links
+- **README Updates**: Added Quick Install section promoting install.sh/.ps1; kept one-liner alternative for advanced users; documented GitHub Actions integration; removed deprecated "npm coming soon" message
+- **Key Design Decisions**:
+  - Scripts follow v1 phase recommendations from Danny's research (eliminates manual copy/paste)
+  - One-liner commands preserved for backward compatibility
+  - Workflow template provides foundation for CI/CD without requiring agent invocation in the workflow itself
+  - Both scripts include validation gates and user-friendly emoji feedback
+  - Supports discovery and adoption per v1 roadmap (SkillHub registration v1.0.x, GitHub Marketplace v2)
+
 ### Your Next Steps
-1. **IMMEDIATE:** Implement Phase 3 deck generator (Markdown → HTML)
-2. **Use:** Locked contract and Linus's templates (`templates/reveal-base.html`, `templates/theme.css`)
-3. **Validate:** Against Livingston's acceptance criteria; coordinate test data (3 examples from Phase 1)
+1. **Community Engagement:** Consider SkillHub listing (v1.0.x timeline per Danny)
+2. **Testing:** Validate install scripts on macOS, Linux, Windows (manual or CI)
+3. **Documentation:** Link installation guides from skill marketplace when ready
