@@ -8,22 +8,43 @@ Give an AI agent a presentation brief or outline in Markdown. The skill generate
 
 ## Getting Started
 
-The fastest way to install is to copy this single command into your project root:
+### Quick Install (Recommended)
+
+**macOS/Linux/WSL:**
+```bash
+curl -sL https://raw.githubusercontent.com/elbruno/md-to-slides/main/install.sh | bash
+```
+
+**Windows (PowerShell):**
+```powershell
+powershell -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/elbruno/md-to-slides/main/install.ps1' -OutFile 'install.ps1'; & './install.ps1'; Remove-Item 'install.ps1'"
+```
+
+Or clone the repo and run locally:
+```bash
+# macOS/Linux/WSL
+./install.sh
+
+# Windows (PowerShell)
+powershell -ExecutionPolicy Bypass -File install.ps1
+```
+
+### One-Liner Installation (Alternative)
+
+If you prefer a single command without saving the script:
 
 ```bash
-# One-liner installation — works on macOS/Linux/WSL
+# macOS/Linux/WSL
 curl -sL https://github.com/elbruno/md-to-slides/archive/main.tar.gz | tar xz --strip-components=1 --wildcards "*/skill" "*/templates" "*/examples" && mkdir -p .copilot/skills/presentation-skill && mv skill/* templates examples .copilot/skills/presentation-skill/ && rmdir skill
 
 # Windows (PowerShell)
 Invoke-WebRequest -Uri "https://github.com/elbruno/md-to-slides/archive/main.zip" -OutFile main.zip; Expand-Archive main.zip -DestinationPath .; New-Item -ItemType Directory -Force .copilot/skills/presentation-skill; Move-Item md-to-slides-main/skill/*,md-to-slides-main/templates,md-to-slides-main/examples .copilot/skills/presentation-skill/ -Force; Remove-Item main.zip,md-to-slides-main -Recurse
 ```
 
-**What this installs:**
+**What gets installed:**
 - `skill/` — contract and AI guidance files (required)
 - `templates/` — HTML/CSS deck primitives (required)
 - `examples/` — reference decks (optional, but recommended for your agent)
-
-> 🚀 **Future:** npm package coming soon — subscribe to [releases](https://github.com/elbruno/md-to-slides/releases) to be notified!
 
 ## Installation (Advanced)
 
@@ -64,6 +85,34 @@ This skill works with **GitHub Copilot** and **Claude Code**. Both clients suppo
 3. Invoke Claude Code and reference the skill when creating presentations.
 
 The skill reads `skill/contract.md` to understand the Markdown format, uses `templates/` for the HTML/CSS foundation, and refers to `examples/` for reference decks.
+
+## Using in GitHub Actions
+
+Automate deck generation in your CI/CD pipeline. Use the included workflow template to generate slides.html files on every push or pull request that modifies Markdown files:
+
+1. Copy `.github/workflows/deck-builder.yml` to your repository (or reference it directly)
+2. On PR/push with `*.md` changes, the workflow will:
+   - Install the presentation-skill automatically
+   - Detect Markdown files in your repo
+   - Set up the environment for your AI agent to generate decks
+   - Optionally validate and commit generated slides
+
+No additional configuration needed — just add the workflow file and push.
+
+### Example: Auto-Generate Decks on PR
+
+```yaml
+# .github/workflows/deck-builder.yml
+name: Deck Builder
+
+on:
+  push:
+    paths:
+      - '**.md'
+  pull_request:
+    paths:
+      - '**.md'
+```
 
 ## Quick Example
 

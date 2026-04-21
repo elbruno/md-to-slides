@@ -21,3 +21,18 @@
 1. **AWAIT:** Phase 3 (Rusty's generator) to produce reference output files
 2. **COORDINATE:** With Rusty on example naming and output validation
 3. **PREPARE:** GitHub Pages deployment docs once Phase 5 validation completes
+
+---
+
+## Release v0.5.0 (2026-04-21 Public Launch)
+
+**Decision:** Release as v0.5.0 (pre-1.0 stability tag) instead of v1.0.0 to reflect that enhanced deployment options are coming in v1.0.0.
+
+**Actions Completed:**
+- ✅ Made repository public: `gh repo edit --visibility public`
+- ✅ Verified: `gh repo view --json isPrivate` returns `false`
+- ✅ Added description and topics for discoverability
+- ✅ Created release v0.5.0 with changelog highlighting screenshot fix, public repo status, and metadata
+- ✅ Release deployed to https://github.com/elbruno/md-to-slides/releases/tag/v0.5.0
+
+**Rationale:** Public repository increases community visibility and enables broader collaboration. Version v0.5.0 signals that package.json remains at 1.0.0 but represents a pre-release stability point before v1.0.0 deployment improvements.

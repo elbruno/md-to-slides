@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="{{ html_lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ deck_title }}</title>
+  <meta name="description" content="{{ deck_description }}">
+  <style>
+{{ inline_theme_css }}
+  </style>
+  {% if extra_head_html %}
+  {{ extra_head_html }}
+  {% endif %}
+</head>
+<body data-theme="{{ theme_mode }}">
+  <div class="reveal" data-deck-title="{{ deck_title }}">
+    <div class="deck-chrome" aria-label="Presentation status and controls">
+      <div class="deck-status">
+        <strong>{{ deck_title }}</strong>
+        <span id="slide-counter" aria-live="polite">1 / 1</span>
+      </div>
+      <button class="deck-button" id="theme-toggle" type="button" aria-label="Toggle theme">Dark</button>
+      <button class="deck-button" id="speaker-view" type="button" aria-label="Open speaker notes">Notes</button>
+    </div>
+
+    <div class="slides">
+      {{ slide_sections }}
+      <!--
+      Keep slides human-editable and Reveal-friendly:
+      <section class="content-slide two-column">
+        <div class="slide-heading">
+          <p class="eyebrow">Section label</p>
+          <h2>Slide title</h2>
+          <p class="lede">Short framing sentence for the room.</p>
+        </div>
+        <div class="split-layout">
+          <div class="flow-stack">Visible content</div>
+          <div class="flow-stack">Proof, metrics, or code</div>
+        </div>
+        <aside class="notes">
+          Speaker notes stay in the deck and open in presenter view.
+        </aside>
+      </section>
+      -->
+    </div>
+
+    <div class="deck-progress" aria-hidden="true">
+      <span id="deck-progress-bar"></span>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.querySelector(".reveal");
+      if (!root) {
+        return;
+      }
+
+      const slidesContainer = root.querySelector(".slides");
+      const progressBar = document.getElementById("deck-progress-bar");
+      const counter = document.getElementById("slide-counter");
+      const themeToggle = document.getElementById("theme-toggle");
+      const speakerButton = document.getElementById("speaker-view");
+      const notesWindowName = "presentation-speaker-view";
+      const storageKey = "presentation-skill-theme";
+      const eventHandlers = new Map();
+      const defaultConfig = {
+        controls: false,
+        progress: true,
+        hash: true,
+        keyboard: true,
+        center: false,
+        slideNumber: true
+      };
+      const state = {
+        bound: false,
+        config: { ...defaultConfig },
+        currentIndex: 0,
+        initialized: false,
+        notesTimer: null,
+        notesWindow: null,
+        slides: [],
+        startTime: Date.now()
+      };
+
+      if (!slidesContainer) {
+        return;
+      }
+
+      function getSlides() {
+        return Array.from(slidesContainer.children).filter(child => child.tagName === "SECTION");
+      }
+
+      function safeStorageGet(key) {
+        try {
+          return window.localStorage ? window.localStorage.getItem(key) : null;
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function safeStorageSet(key, value) {
+        try {
+          if (window.localStorage) {
+            window.localStorage.setItem(key, value);
+          }
+        } catch (error) {
+          // Ignore storage errors. The deck still works without persistence.
+        }
+      }
+
+      function getSlideTitle(slide) {
+        const heading = slide ? slide.querySelector("h1, h2, h3") : null;
+        return heading ? heading.textContent.trim() : "Untitled slide";
+      }
+
+      function getNotesMarkup(slide) {
+        const notes = slide ? slide.querySelector("aside.notes") : null;
+        return notes ? notes.innerHTML.trim() : "<p>No presenter notes for this slide.</p>";
+      }
+
+      function fragmentsFor(slide) {
+        return slide ? Array.from(slide.querySelectorAll(".fragment")) : [];
+      }
+
+      function visibleFragmentCount(slide) {
+        return fragmentsFor(slide).filter(fragment => fragment.classList.contains("visible")).length;
+      }
+
+      function emit(name, detail) {
+        const handlers = eventHandlers.get(name) || [];
+        handlers.forEach(handler => {
+          try {
+            handler(detail);
+          } catch (error) {
+            console.error(error);
+          }
+        });
+        root.dispatchEvent(new CustomEvent(name, { detail }));
+      }
+
+      function updateThemeButton() {
+        if (!themeToggle) {
+          return;
+        }
+        const currentTheme = document.body.dataset.theme === "light" ? "light" : "dark";
+        const nextTheme = currentTheme === "light" ? "dark" : "light";
+        themeToggle.textContent = currentTheme === "light" ? "Light" : "Dark";
+        themeToggle.setAttribute("aria-pressed", currentTheme === "light" ? "true" : "false");
+        themeToggle.setAttribute("aria-label", `Switch to ${nextTheme} theme`);
+      }
+
+      function setTheme(mode, persist = true) {
+        const nextTheme = mode === "light" ? "light" : "dark";
+        document.body.dataset.theme = nextTheme;
+        if (persist) {
+          safeStorageSet(storageKey, nextTheme);
+        }
+        updateThemeButton();
+        renderNotesWindow();
+        emit("themechanged", { theme: nextTheme });
+      }
+
+      function toggleTheme() {
+        setTheme(document.body.dataset.theme === "light" ? "dark" : "light");
+      }
+
+      function updateChrome() {
+        const total = state.slides.length || 1;
+        const currentSlide = state.slides[state.currentIndex] || null;
+        if (counter) {
+          counter.textContent = `${state.currentIndex + 1} / ${total}`;
+          counter.setAttribute("aria-label", `Slide ${state.currentIndex + 1} of ${total}: ${getSlideTitle(currentSlide)}`);
+        }
+        if (progressBar) {
+          const percent = total === 1 ? 100 : (state.currentIndex / (total - 1)) * 100;
+          progressBar.style.width = state.config.progress ? `${percent}%` : "0%";
+          if (progressBar.parentElement) {
+            progressBar.parentElement.hidden = !state.config.progress;
+          }
+        }
+      }
+
+      function setHash(index) {
+        if (!state.config.hash) {
+          return;
+        }
+        const hash = `#/${index + 1}`;
+        if (window.location.hash === hash) {
+          return;
+        }
+        try {
+          if (history.replaceState) {
+            history.replaceState(null, "", hash);
+            return;
+          }
+        } catch (error) {
+          // Fall back to direct hash updates for file-based decks.
+        }
+        {
+          window.location.hash = hash;
+        }
+      }
+
+      function formatElapsed() {
+        const totalSeconds = Math.max(0, Math.floor((Date.now() - state.startTime) / 1000));
+        const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
+        const seconds = (totalSeconds % 60).toString().padStart(2, "0");
+        return `${minutes}:${seconds}`;
+      }
+
+      function speakerThemeCss(mode) {
+        if (mode === "light") {
+          return [
+            "body{margin:0;font-family:Segoe UI,Aptos,Arial,sans-serif;background:#f8fafc;color:#122033;}",
+            "main{min-height:100vh;display:grid;grid-template-columns:1.1fr .9fr;}",
+            "section,aside{padding:28px 32px;}",
+            "section{border-right:1px solid rgba(84,101,124,.22);background:#ffffff;}",
+            "aside{display:grid;gap:18px;align-content:start;background:#eef4fb;}",
+            "p{margin:0;line-height:1.45;}",
+            "h1{margin:0 0 18px;font-size:34px;line-height:1.05;}",
+            ".label{margin:0 0 8px;color:#1550af;text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;}",
+            ".value{font-size:22px;}",
+            ".notes{font-size:20px;line-height:1.5;}",
+            ".meta{font-size:18px;color:#54657c;}",
+            "code{font-family:Cascadia Code,Consolas,monospace;background:rgba(15,23,42,.06);padding:.12em .32em;border-radius:6px;}"
+          ].join("");
+        }
+        return [
+          "body{margin:0;font-family:Segoe UI,Aptos,Arial,sans-serif;background:#0f172a;color:#f8fafc;}",
+          "main{min-height:100vh;display:grid;grid-template-columns:1.1fr .9fr;}",
+          "section,aside{padding:28px 32px;}",
+          "section{border-right:1px solid rgba(148,163,184,.2);background:#111c31;}",
+          "aside{display:grid;gap:18px;align-content:start;background:#0b1323;}",
+          "p{margin:0;line-height:1.45;}",
+          "h1{margin:0 0 18px;font-size:34px;line-height:1.05;}",
+          ".label{margin:0 0 8px;color:#7dd3fc;text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;}",
+          ".value{font-size:22px;}",
+          ".notes{font-size:20px;line-height:1.5;}",
+          ".meta{font-size:18px;color:#cbd5e1;}",
+          "code{font-family:Cascadia Code,Consolas,monospace;background:rgba(148,163,184,.14);padding:.12em .32em;border-radius:6px;}"
+        ].join("");
+      }
+
+      function ensureNotesWindow() {
+        if (!state.notesWindow || state.notesWindow.closed) {
+          return false;
+        }
+
+        const doc = state.notesWindow.document;
+        if (doc.getElementById("speaker-current-title")) {
+          return true;
+        }
+
+        doc.write(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Speaker view</title>
+  <style id="speaker-theme"></style>
+</head>
+<body>
+  <main>
+    <section>
+      <p class="label">Current slide</p>
+      <h1 id="speaker-current-title"></h1>
+      <div id="speaker-current-notes" class="notes"></div>
+    </section>
+    <aside>
+      <div>
+        <p class="label">Deck status</p>
+        <p id="speaker-slide-count" class="value"></p>
+      </div>
+      <div>
+        <p class="label">Elapsed</p>
+        <p id="speaker-elapsed" class="value"></p>
+      </div>
+      <div>
+        <p class="label">Up next</p>
+        <p id="speaker-next-title" class="value"></p>
+      </div>
+      <div>
+        <p class="label">Fragments</p>
+        <p id="speaker-fragments" class="meta"></p>
+      </div>
+      <div>
+        <p class="label">Shortcuts</p>
+        <p class="meta">Arrow keys move, <code>S</code> opens notes, <code>T</code> toggles theme, <code>F</code> toggles fullscreen.</p>
+      </div>
+    </aside>
+  </main>
+</body>
+</html>`);
+        doc.close();
+        return true;
+      }
+
+      function renderNotesWindow() {
+        if (!ensureNotesWindow()) {
+          return;
+        }
+
+        const doc = state.notesWindow.document;
+        const currentSlide = state.slides[state.currentIndex] || null;
+        const nextSlide = state.slides[state.currentIndex + 1] || null;
+        doc.getElementById("speaker-theme").textContent = speakerThemeCss(document.body.dataset.theme === "light" ? "light" : "dark");
+        doc.getElementById("speaker-current-title").textContent = getSlideTitle(currentSlide);
+        doc.getElementById("speaker-current-notes").innerHTML = getNotesMarkup(currentSlide);
+        doc.getElementById("speaker-slide-count").textContent = `Slide ${state.currentIndex + 1} of ${state.slides.length}`;
+        doc.getElementById("speaker-elapsed").textContent = formatElapsed();
+        doc.getElementById("speaker-next-title").textContent = nextSlide ? getSlideTitle(nextSlide) : "End of deck";
+        doc.getElementById("speaker-fragments").textContent = `${visibleFragmentCount(currentSlide)} revealed of ${fragmentsFor(currentSlide).length}`;
+        doc.title = `${getSlideTitle(currentSlide)} — speaker view`;
+      }
+
+      function ensureNotesTimer() {
+        if (state.notesTimer) {
+          return;
+        }
+        state.notesTimer = window.setInterval(() => {
+          if (!state.notesWindow || state.notesWindow.closed) {
+            window.clearInterval(state.notesTimer);
+            state.notesTimer = null;
+            state.notesWindow = null;
+            return;
+          }
+          renderNotesWindow();
+        }, 1000);
+      }
+
+      function openSpeakerWindow() {
+        state.notesWindow = window.open("", notesWindowName, "width=1280,height=720");
+        if (!state.notesWindow) {
+          return;
+        }
+        ensureNotesWindow();
+        ensureNotesTimer();
+        renderNotesWindow();
+      }
+
+      function revealNextFragment(slide) {
+        const nextFragment = fragmentsFor(slide).find(fragment => !fragment.classList.contains("visible"));
+        if (!nextFragment) {
+          return false;
+        }
+        nextFragment.classList.add("visible");
+        emit("fragmentshown", { fragment: nextFragment, slide });
+        renderNotesWindow();
+        return true;
+      }
+
+      function hideLastFragment(slide) {
+        const visibleFragments = fragmentsFor(slide).filter(fragment => fragment.classList.contains("visible"));
+        const lastFragment = visibleFragments[visibleFragments.length - 1];
+        if (!lastFragment) {
+          return false;
+        }
+        lastFragment.classList.remove("visible");
+        emit("fragmenthidden", { fragment: lastFragment, slide });
+        renderNotesWindow();
+        return true;
+      }
+
+      function goTo(index, options = {}) {
+        const previousSlide = state.slides[state.currentIndex] || null;
+        const boundedIndex = Math.max(0, Math.min(index, state.slides.length - 1));
+        state.currentIndex = boundedIndex;
+
+        state.slides.forEach((slide, slideIndex) => {
+          slide.classList.toggle("present", slideIndex === boundedIndex);
+          slide.classList.toggle("is-active", slideIndex === boundedIndex);
+          slide.classList.toggle("past", slideIndex < boundedIndex);
+          slide.classList.toggle("future", slideIndex > boundedIndex);
+          slide.setAttribute("aria-hidden", slideIndex === boundedIndex ? "false" : "true");
+          slide.setAttribute("data-slide-number", String(slideIndex + 1));
+          slide.setAttribute("role", "group");
+          slide.setAttribute("aria-label", `Slide ${slideIndex + 1} of ${state.slides.length}: ${getSlideTitle(slide)}`);
+          if (slideIndex !== boundedIndex && !options.preserveFragments) {
+            fragmentsFor(slide).forEach(fragment => fragment.classList.remove("visible"));
+          }
+        });
+
+        if (!options.skipHash) {
+          setHash(boundedIndex);
+        }
+        updateChrome();
+        renderNotesWindow();
+        emit("slidechanged", {
+          currentSlide: state.slides[boundedIndex] || null,
+          indexh: boundedIndex,
+          previousSlide
+        });
+      }
+
+      function next() {
+        if (revealNextFragment(state.slides[state.currentIndex])) {
+          return;
+        }
+        goTo(state.currentIndex + 1);
+      }
+
+      function prev() {
+        if (hideLastFragment(state.slides[state.currentIndex])) {
+          return;
+        }
+        goTo(state.currentIndex - 1);
+      }
+
+      function startFromHash() {
+        const match = window.location.hash.match(/^#\/(\d+)(?:\/(\d+))?$/);
+        return match ? Math.max(0, Math.min(parseInt(match[1], 10) - 1, state.slides.length - 1)) : 0;
+      }
+
+      function handleKeydown(event) {
+        if (!state.config.keyboard || event.altKey || event.ctrlKey || event.metaKey) {
+          return;
+        }
+
+        const target = event.target;
+        if (target && /^(INPUT|TEXTAREA|SELECT)$/i.test(target.tagName)) {
+          return;
+        }
+
+        switch (event.key) {
+          case "ArrowRight":
+          case "PageDown":
+          case " ":
+          case "j":
+          case "J":
+          case "n":
+          case "N":
+            event.preventDefault();
+            next();
+            break;
+          case "ArrowLeft":
+          case "PageUp":
+          case "k":
+          case "K":
+          case "p":
+          case "P":
+            event.preventDefault();
+            prev();
+            break;
+          case "Home":
+            event.preventDefault();
+            goTo(0);
+            break;
+          case "End":
+            event.preventDefault();
+            goTo(state.slides.length - 1);
+            break;
+          case "f":
+          case "F":
+            event.preventDefault();
+            if (document.fullscreenElement) {
+              document.exitFullscreen();
+            } else {
+              document.documentElement.requestFullscreen?.();
+            }
+            break;
+          case "s":
+          case "S":
+            event.preventDefault();
+            openSpeakerWindow();
+            break;
+          case "t":
+          case "T":
+            event.preventDefault();
+            toggleTheme();
+            break;
+          default:
+            break;
+        }
+      }
+
+      function bindEventsOnce() {
+        if (state.bound) {
+          return;
+        }
+        window.addEventListener("hashchange", () => goTo(startFromHash(), { skipHash: true }));
+        document.addEventListener("keydown", handleKeydown);
+        themeToggle?.addEventListener("click", toggleTheme);
+        speakerButton?.addEventListener("click", openSpeakerWindow);
+        state.bound = true;
+      }
+
+      const api = {
+        initialize(options = {}) {
+          state.config = { ...defaultConfig, ...state.config, ...options };
+          state.slides = getSlides();
+          if (!state.slides.length) {
+            return Promise.resolve(api);
+          }
+
+          bindEventsOnce();
+          const storedTheme = safeStorageGet(storageKey);
+          setTheme(storedTheme || document.body.dataset.theme || "dark", false);
+          goTo(startFromHash(), { skipHash: !state.config.hash });
+          root.dataset.ready = "true";
+          if (!state.initialized) {
+            emit("ready", { currentSlide: state.slides[state.currentIndex], indexh: state.currentIndex });
+          }
+          state.initialized = true;
+          return Promise.resolve(api);
+        },
+        configure(options = {}) {
+          state.config = { ...state.config, ...options };
+          updateChrome();
+          return api;
+        },
+        getConfig() {
+          return { ...state.config };
+        },
+        getCurrentSlide() {
+          return state.slides[state.currentIndex] || null;
+        },
+        getIndices() {
+          return {
+            f: visibleFragmentCount(state.slides[state.currentIndex]),
+            h: state.currentIndex,
+            v: 0
+          };
+        },
+        getRevealElement() {
+          return root;
+        },
+        getSlides() {
+          return state.slides.slice();
+        },
+        getTotalSlides() {
+          return state.slides.length;
+        },
+        isReady() {
+          return state.initialized;
+        },
+        layout() {
+          updateChrome();
+          return api;
+        },
+        next,
+        on(name, handler) {
+          const handlers = eventHandlers.get(name) || [];
+          handlers.push(handler);
+          eventHandlers.set(name, handlers);
+          return api;
+        },
+        off(name, handler) {
+          const handlers = eventHandlers.get(name) || [];
+          eventHandlers.set(name, handlers.filter(candidate => candidate !== handler));
+          return api;
+        },
+        prev,
+        slide(index) {
+          if (typeof index === "number") {
+            goTo(index);
+          }
+          return api;
+        },
+        sync() {
+          state.slides = getSlides();
+          goTo(Math.min(state.currentIndex, state.slides.length - 1), { skipHash: !state.config.hash, preserveFragments: true });
+          return api;
+        },
+        toggleTheme
+      };
+
+      window.Reveal = api;
+      api.initialize();
+    })();
+  </script>
+  {% if extra_script_html %}
+  {{ extra_script_html }}
+  {% endif %}
+</body>
+</html>

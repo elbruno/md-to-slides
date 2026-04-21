@@ -1,0 +1,137 @@
+name: Deck Builder
+
+# Trigger on push or pull requests that modify .md files
+on:
+  push:
+    paths:
+      - '**.md'
+  pull_request:
+    paths:
+      - '**.md'
+
+jobs:
+  generate-decks:
+    name: Generate Presentation Decks
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Install Node.js if needed for validation
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Install the presentation-skill
+      - name: Install presentation-skill
+        run: |
+          # Download and extract the skill
+          curl -sL https://github.com/elbruno/md-to-slides/archive/main.tar.gz | tar xz --strip-components=1 --wildcards "*/skill" "*/templates" "*/examples"
+          
+          # Set up the skill directory
+          mkdir -p .copilot/skills/presentation-skill
+          mv skill/* templates examples .copilot/skills/presentation-skill/
+          rmdir skill 2>/dev/null || true
+          
+          # Verify installation
+          ls -la .copilot/skills/presentation-skill/
+
+      # Detect markdown files that may need processing
+      - name: Detect markdown files
+        id: detect
+        run: |
+          # Find all markdown files in the repo (excluding this workflow)
+          md_files=$(find . -name "*.md" -type f ! -path "./.github/*" ! -path "./node_modules/*" ! -path "./.copilot/*" | head -10)
+          echo "markdown_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$md_files" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          if [ -z "$md_files" ]; then
+            echo "No markdown files found for deck generation"
+          else
+            echo "Found markdown files:"
+            echo "$md_files"
+          fi
+
+      # Note: Deck generation happens via your AI agent (GitHub Copilot / Claude Code)
+      # This workflow template provides the foundation for CI/CD integration.
+      # When your agent creates slides.html files, this workflow can:
+      # 1. Validate the output (checking for required HTML elements)
+      # 2. Commit generated slides back to the repo
+      # 3. Comment on the PR with a link to the deck
+      
+      # Example: Validate generated HTML files (if they exist)
+      - name: Validate generated decks
+        if: always()
+        run: |
+          # Look for any slides.html files that were generated
+          if find . -name "slides.html" -type f ! -path "./.copilot/*" ! -path "./node_modules/*" | grep -q .; then
+            echo "✅ Generated HTML files found"
+            find . -name "slides.html" -type f ! -path "./.copilot/*" ! -path "./node_modules/*" | xargs ls -lh
+          else
+            echo "ℹ️  No generated HTML files found - agent will create them when invoked"
+          fi
+
+      # Optional: Commit generated slides if this is a push (not a PR)
+      - name: Commit generated decks
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Check for any new slides.html files
+          if git status --porcelain | grep -q "slides.html"; then
+            git add '**/slides.html'
+            git commit -m "docs: auto-generated presentation decks [skip ci]" || echo "No changes to commit"
+            git push
+          else
+            echo "No generated decks to commit"
+          fi
+
+      # Optional: Comment on PR with deck links
+      - name: Comment on PR with deck links
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // This example shows how to comment on a PR with generated deck links
+            // Customize based on your actual deck output locations
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Find all slides.html files
+            const { execSync } = require('child_process');
+            const files = execSync('find . -name "slides.html" -type f ! -path "./.copilot/*" ! -path "./node_modules/*" 2>/dev/null')
+              .toString()
+              .trim()
+              .split('\n')
+              .filter(f => f.length > 0);
+            
+            if (files.length === 0) {
+              console.log('No generated decks to report');
+              return;
+            }
+            
+            // Build comment with deck links
+            let comment = '## 🎉 Generated Presentation Decks\n\n';
+            files.forEach(file => {
+              const name = path.basename(path.dirname(file));
+              comment += `- [${name}](${file})\n`;
+            });
+            
+            // Post comment to PR if we have an API token
+            try {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            } catch (e) {
+              console.log('Could not post comment:', e.message);
+            }
