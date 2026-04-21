@@ -1,0 +1,44 @@
+{
+  "universe_usage_history": [
+    {
+      "assignment_id": "presentationskill-2026-04-21",
+      "universe": "Ocean's Eleven",
+      "created_at": "2026-04-21T08:34:14-04:00"
+    }
+  ],
+  "assignment_cast_snapshots": {
+    "presentationskill-2026-04-21": {
+      "project": "HTML presentation skill for GitHub Copilot and Claude Code",
+      "team_root": "C:\\src\\presentationskill",
+      "universe": "Ocean's Eleven",
+      "created_at": "2026-04-21T08:34:14-04:00",
+      "members": [
+        {
+          "name": "Danny",
+          "folder": "danny",
+          "role": "Lead"
+        },
+        {
+          "name": "Rusty",
+          "folder": "rusty",
+          "role": "Skill Architect"
+        },
+        {
+          "name": "Linus",
+          "folder": "linus",
+          "role": "Presentation Engineer"
+        },
+        {
+          "name": "Basher",
+          "folder": "basher",
+          "role": "Integration Engineer"
+        },
+        {
+          "name": "Livingston",
+          "folder": "livingston",
+          "role": "Tester"
+        }
+      ]
+    }
+  }
+}
