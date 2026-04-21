@@ -211,9 +211,111 @@
 
 ---
 
+### 5. Skill Contract: Repository-Hosted Single-File Format (Rusty, 2026-04-21)
+
+**Status:** ✅ Locked  
+**Decision:** Lock v1 authoring contract around one repo-hosted source file to ensure portability and simplicity.
+
+**Contract Details:**
+- **Input:** Single Markdown file with YAML front matter
+- **Separators:** `---` for slide boundaries
+- **Directives:** Optional `<!-- slide:type=... -->` for explicit slide type control
+- **Speaker Notes:** `??? notes` syntax for per-slide notes
+- **Output:** One self-contained `slides.html` file written beside source
+
+**Rationale:**
+- Keeps contract explicit and portable across GitHub Copilot and Claude Code
+- Easy to version in repo and integrate with existing workflows
+- Small enough for Linus and Basher to build around without format churn
+- Supports all 6 v1 slide types without requiring multi-file projects
+
+**Success Metrics:**
+- ✅ Skill generates valid HTML in <10 seconds
+- ✅ All 3 example inputs (minimal, conference, workshop) produce working decks
+- ✅ Zero external runtime dependencies for output files
+
+---
+
+### 6. Slide Primitives: Self-Contained Reveal.js Runtime (Linus, 2026-04-21)
+
+**Status:** ✅ Locked  
+**Decision:** Build reusable starter runtime and CSS system so generated decks work immediately without external tooling.
+
+**Core Components:**
+- **Base Template:** `templates/reveal-base.html` with embedded Reveal.js 5.2.0
+- **CSS System:** `templates/theme.css` with design tokens and slide primitives
+- **Default Theme:** System font stacks (no web font dependency required)
+- **Accessibility:** Semantic HTML, WCAG AA contrast, keyboard navigation
+
+**Design Principles:**
+- All assets self-contained or CDN-linked (no build step required)
+- CSS custom properties enable runtime theme customization
+- Slide types extensible through class-based styling (not per-slide CSS)
+- Projector-friendly defaults (16:9, offline-capable, keyboard-accessible)
+
+**Benefits:**
+- Linus and Basher can build independently from Rusty's generator
+- Generated output immediately ready for presenter mode and PDF export
+- Users can hand-edit output if needed (portable, version-control friendly)
+
+---
+
+### 7. Repository Packaging & Docs-First Approach (Basher, 2026-04-21)
+
+**Status:** ✅ Locked  
+**Decision:** Execute Phase 4 packaging as docs-first pass without placeholder implementation files.
+
+**Deliverables:**
+- **`README.md`** — Main entry point with quick start and feature highlights
+- **`docs/repository-structure.md`** — Define folder contract and ownership boundaries
+- **`docs/publishing.md`** — Establish GitHub Pages and skill registration path
+
+**Rationale:**
+- Rusty and Linus own implementation; Basher avoids duplication by focusing on packaging surface
+- Honest documentation prevents repo from appearing runnable before it is
+- Clear folder structure and ownership boundaries reduce merge conflicts
+- Publishing path established before code lands (enables faster release)
+
+**Impact:**
+- Contributors have one clear layout to build into
+- Public path from GitHub to Copilot ecosystem is concrete and documented
+- Baseline repo health (license, gitignore, contributing guide) ready before Phase 3
+
+---
+
+### 8. Acceptance Criteria & Two-Phase Validation (Livingston, 2026-04-21)
+
+**Status:** ✅ Locked  
+**Decision:** Define acceptance criteria upfront (before implementation) and establish two-phase validation strategy.
+
+**Phase 1: Acceptance Criteria (Quality Contract)**
+- Output Contract: HTML5 valid, no console errors, 1920×1080 render, ≤5MB file size
+- Content Integrity: Preserve outline, notes, code blocks, special chars, images with alt text
+- Visual Baseline: 24pt min body text, 44pt min headings, WCAG AA contrast, offline capability
+- Presentation-Room Reality: Works on Windows/macOS/Linux, 1080p/4K projectors, 16:9 aspect ratio
+- Success Metrics: HTML validity, console errors, accessibility baseline, keyboard navigation
+
+**Phase 2: Two-Phase Validation**
+- **Commit-Time (Automated):** HTML validator, content extraction, a11y baseline, keyboard nav, encoding
+- **Release-Time (Manual):** Projector visual test (mandatory 2+ sign-off), theme toggle, presenter mode, edge cases
+
+**Key Decisions:**
+- Acceptance criteria **written before implementation** (gates quality upfront)
+- 30+ failure modes documented and maintained (edge case registry)
+- Regression suite: 3 baseline decks tested repeatedly across releases
+- Presentation-room reality testing mandatory pre-release (projector approval required)
+
+**Impact:**
+- Teams align on pass/fail criteria before Phases 2-5 begin
+- Prevents scope creep and output that looks valid but fails in production
+- Regression suite prevents subtle breaks (e.g., presenter mode timer)
+
+---
+
 ## Governance
 
 - All meaningful changes require team consensus
 - Document architectural decisions here
 - Keep history focused on work, decisions focused on direction
 - Decisions merged from `.squad/decisions/inbox/` weekly; inbox files deduplicated and archived
+- Decisions 5-8 represent locked commitments from first implementation slice (2026-04-21)

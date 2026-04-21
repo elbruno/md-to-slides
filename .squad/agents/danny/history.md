@@ -29,4 +29,12 @@
 - [x] Rusty: Defined skill contract, portability strategy, examples matrix
 - [x] Linus: Extracted deck architecture, theme tokens, slide primitives
 - [x] Livingston: Defined acceptance criteria, test strategy, failure modes
-- [ ] **Next:** Rusty publishes Phase 1 SPEC.md with 3 examples
+- [x] Danny: Design review complete — implementation interfaces locked
+
+### Design Review Complete (2026-04-21)
+- ✅ Minimal repo structure defined (flat, 4 top-level dirs)
+- ✅ File ownership assigned: Rusty (skill/), Linus (templates/), Basher (docs/, examples/, README)
+- ✅ v1 contract: YAML front matter + Markdown slides → self-contained HTML
+- ✅ No severe blockers — work may proceed
+- ✅ Repository name: `copilot-presentation-skill` (clear scope)
+- **Next:** Rusty creates `skill/SKILL.md` + 3 example inputs

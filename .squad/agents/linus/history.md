@@ -25,7 +25,12 @@
 - **Livingston:** Acceptance criteria comprehensive; failure modes mapped; test strategy defined
 - **Basher:** Standby for Phase 4 (repo packaging)
 
+### First Slice Completed (2026-04-21 13:11 UTC) ✅
+- **Deliverables:** `templates/reveal-base.html`, `templates/theme.css`, `examples/minimal-talk/slides.html`
+- **Team Coordination:** Rusty completed contract; Basher completed packaging; Livingston completed QA docs
+- **Status:** All decisions merged into canonical `decisions.md`; inbox cleared
+
 ### Your Next Steps
-1. **IMMEDIATE:** Await Rusty's Phase 1 SPEC.md (already drafted, pending formal publish)
-2. **Once Phase 1 locked:** Begin building templates/reveal-base.html.j2 with reusable components
-3. **Collaborate with Livingston:** Define CSS/HTML patterns that feed into automated visual tests
+1. **AWAIT:** Rusty's Phase 3 deck generator (consumes your templates)
+2. **COLLABORATE:** With Livingston on visual/accessibility test patterns derived from your CSS/HTML
+3. **PREPARE:** For integration testing once Rusty ships generator implementation

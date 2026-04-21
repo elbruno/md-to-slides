@@ -25,7 +25,12 @@
 - **Livingston:** Acceptance criteria locked; 30+ failure modes; auto + manual test strategy
 - **Basher:** Standby for Phase 4
 
+### First Slice Completed (2026-04-21 13:11 UTC) ✅
+- **Deliverables:** `skill/contract.md`, `.copilot/skills/presentation-skill/SKILL.md`, `examples/minimal-talk/input.md`
+- **Team Coordination:** Linus completed templates; Basher completed packaging; Livingston completed QA docs
+- **Status:** All decisions merged into canonical `decisions.md`; inbox cleared
+
 ### Your Next Steps
-1. **IMMEDIATE:** Publish Phase 1 SPEC.md with 3 runnable examples (minimal, conference, workshop)
-2. **In parallel:** Work with Livingston on test case definitions to ensure spec examples are testable
-3. **Await:** Linus's Phase 2 templates; then proceed to Phase 3 (generator implementation)
+1. **IMMEDIATE:** Implement Phase 3 deck generator (Markdown → HTML)
+2. **Use:** Locked contract and Linus's templates (`templates/reveal-base.html`, `templates/theme.css`)
+3. **Validate:** Against Livingston's acceptance criteria; coordinate test data (3 examples from Phase 1)

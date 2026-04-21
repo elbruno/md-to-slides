@@ -32,3 +32,13 @@
 2. **Collaborate with Rusty:** Define test data sets for Phase 1 examples (minimal, conference, workshop)
 3. **Collaborate with Linus:** Define CSS/HTML patterns and accessibility requirements for manual visual tests
 4. **Pre-Phase 3:** Prepare comprehensive test harness for generator validation once Rusty ships code
+
+### First Slice Completed (2026-04-21 13:11 UTC) ✅
+- **Deliverables:** `docs/acceptance-criteria.md`, `docs/validation-checklist.md`
+- **Team Coordination:** Rusty completed contract; Linus completed templates; Basher completed packaging
+- **Status:** All decisions merged into canonical `decisions.md`; inbox cleared
+
+### Phase 3 Preparation
+1. **Build automated test skeleton** for Rusty's generator (HTML validator, content extraction, a11y baseline)
+2. **Coordinate test data** with Rusty using all 3 Phase 1 examples (minimal, conference, workshop)
+3. **Prepare manual test playbook** before Phase 5 (projector approval, presenter mode, edge cases)
