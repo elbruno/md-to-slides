@@ -10,7 +10,6 @@ The package now ships the `md2slides` CLI alongside the skill assets.
 2. Run the packaged CLI from your project root:
 
 ```bash
-npm install md-to-slides
 npx md2slides init
 ```
 

@@ -205,3 +205,15 @@
 - README example galleries read better on GitHub when all available decks appear as compact linked preview cards instead of mixed prose and placeholders.
 - Visual-example copy should mirror the checked-in screenshot set exactly so docs do not lag behind regenerated assets.
 
+## Session: README Getting Started Fix (2026-04-21T12:52:03Z)
+
+### Issue Fixed
+- **Problem:** Getting Started section had duplicate `npm install md-to-slides` in step 2
+- **Solution:** Removed duplicate line from step 2 code block
+- **Result:** Flow is now clean and linear:
+  1. `npm install md-to-slides`
+  2. `npx md2slides init`
+
+### Learnings
+- Getting Started flows benefit from clear step separation; duplication creates confusion about whether to re-run installation.
+
