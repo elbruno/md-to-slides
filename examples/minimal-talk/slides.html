@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ship a clear talk</title>
+  <meta name="description" content="Generated example deck for the minimal-talk scenario.">
+  <style>
+:root {
+  color-scheme: dark light;
+  --deck-font-sans: "Aptos", "Segoe UI", "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --deck-font-mono: "Cascadia Code", "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  --deck-width: 1600px;
+  --deck-height: 900px;
+  --deck-background: #08111f;
+  --deck-surface: rgba(13, 22, 39, 0.86);
+  --deck-surface-strong: #10203a;
+  --deck-panel: rgba(11, 18, 34, 0.94);
+  --deck-text: #f6fbff;
+  --deck-muted: #97abc2;
+  --deck-accent: #57c7ff;
+  --deck-accent-strong: #0078d4;
+  --deck-accent-soft: rgba(87, 199, 255, 0.18);
+  --deck-secondary: #43d9bd;
+  --deck-warm: #ff8a4c;
+  --deck-border: rgba(151, 171, 194, 0.24);
+  --deck-focus: rgba(87, 199, 255, 0.65);
+  --deck-link: #8fdfff;
+  --deck-link-hover: #c3f0ff;
+  --deck-code-background: #0a1325;
+  --deck-code-text: #d8ecff;
+  --deck-inline-code-background: rgba(143, 223, 255, 0.12);
+  --deck-table-header: rgba(255, 255, 255, 0.05);
+  --deck-shadow: 0 24px 64px rgba(2, 8, 23, 0.38);
+  --deck-radius-sm: 14px;
+  --deck-radius-md: 22px;
+  --deck-radius-lg: 32px;
+  --deck-space-1: 0.35rem;
+  --deck-space-2: 0.65rem;
+  --deck-space-3: 1rem;
+  --deck-space-4: 1.4rem;
+  --deck-space-5: 2rem;
+  --deck-space-6: 2.8rem;
+  --deck-space-7: 4rem;
+  --deck-title-size: clamp(3rem, 5vw, 5.2rem);
+  --deck-h2-size: clamp(2.3rem, 3vw, 3.5rem);
+  --deck-h3-size: clamp(1.4rem, 1.8vw, 2rem);
+  --deck-body-size: clamp(1.15rem, 1.4vw, 1.65rem);
+  --deck-small-size: 1rem;
+  --deck-line-height: 1.28;
+  --deck-gradient-hero: linear-gradient(135deg, #f7fbff 0%, #8fdfff 34%, #57c7ff 60%, #43d9bd 100%);
+  --deck-gradient-accent: linear-gradient(135deg, rgba(87, 199, 255, 0.9), rgba(67, 217, 189, 0.92), rgba(255, 138, 76, 0.88));
+  --deck-gradient-glow:
+    radial-gradient(circle at top left, rgba(87, 199, 255, 0.18), transparent 38%),
+    radial-gradient(circle at bottom right, rgba(67, 217, 189, 0.14), transparent 34%);
+}
+
+[data-theme="light"] {
+  --deck-background: #eef4fb;
+  --deck-surface: rgba(255, 255, 255, 0.92);
+  --deck-surface-strong: #ffffff;
+  --deck-panel: rgba(255, 255, 255, 0.97);
+  --deck-text: #122033;
+  --deck-muted: #54657c;
+  --deck-accent-soft: rgba(0, 120, 212, 0.1);
+  --deck-border: rgba(84, 101, 124, 0.24);
+  --deck-focus: rgba(0, 120, 212, 0.45);
+  --deck-link: #1550af;
+  --deck-link-hover: #0f8f7f;
+  --deck-code-background: #0f172a;
+  --deck-inline-code-background: rgba(15, 23, 42, 0.08);
+  --deck-table-header: rgba(15, 23, 42, 0.04);
+  --deck-shadow: 0 24px 64px rgba(15, 23, 42, 0.14);
+  --deck-gradient-hero: linear-gradient(135deg, #0f172a 0%, #1550af 36%, #0078d4 62%, #0f8f7f 100%);
+  --deck-gradient-accent: linear-gradient(135deg, rgba(0, 120, 212, 0.9), rgba(8, 145, 178, 0.86), rgba(232, 89, 12, 0.8));
+  --deck-gradient-glow:
+    radial-gradient(circle at top left, rgba(0, 120, 212, 0.12), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(8, 145, 178, 0.1), transparent 32%);
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: var(--deck-background);
+  color: var(--deck-text);
+  font-family: var(--deck-font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--deck-accent);
+  color: #08111f;
+}
+
+a {
+  color: var(--deck-link);
+  text-decoration-thickness: 0.12em;
+  text-underline-offset: 0.16em;
+}
+
+a:hover {
+  color: var(--deck-link-hover);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--deck-focus);
+  outline-offset: 3px;
+}
+
+.reveal {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(8, 17, 31, 0.12), rgba(8, 17, 31, 0.35)),
+    var(--deck-gradient-glow),
+    var(--deck-background);
+  isolation: isolate;
+}
+
+.reveal::before {
+  content: "";
+  position: absolute;
+  inset: 1.2rem;
+  border: 1px solid rgba(151, 171, 194, 0.16);
+  border-radius: 36px;
+  pointer-events: none;
+}
+
+[data-theme="light"] .reveal::before {
+  border-color: rgba(84, 101, 124, 0.18);
+}
+
+.reveal .slides {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.reveal .slides > section {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--deck-space-5);
+  box-sizing: border-box;
+  padding: 5rem 5.4rem 5.5rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(18px);
+  transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
+    var(--deck-gradient-glow),
+    transparent;
+}
+
+.reveal .slides > section.present,
+.reveal .slides > section.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.reveal .slides > section::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 5px;
+  background: var(--deck-gradient-accent);
+}
+
+.reveal .slides > section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal p,
+.reveal li,
+.reveal blockquote,
+.reveal figcaption,
+.reveal td,
+.reveal th {
+  margin: 0;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.reveal h1 {
+  font-size: var(--deck-title-size);
+}
+
+.reveal h2 {
+  font-size: var(--deck-h2-size);
+}
+
+.reveal h3 {
+  font-size: var(--deck-h3-size);
+}
+
+.reveal p,
+.reveal li,
+.reveal blockquote,
+.reveal figcaption,
+.reveal td,
+.reveal th {
+  font-size: var(--deck-body-size);
+  line-height: var(--deck-line-height);
+}
+
+.reveal ul,
+.reveal ol {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.reveal li + li {
+  margin-top: 0.45rem;
+}
+
+.reveal strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+[data-theme="light"] .reveal strong {
+  color: #0f172a;
+}
+
+.reveal code:not(pre code) {
+  display: inline-block;
+  padding: 0.12em 0.36em;
+  border-radius: 0.45rem;
+  background: var(--deck-inline-code-background);
+  font-family: var(--deck-font-mono);
+  font-size: 0.9em;
+}
+
+.reveal pre {
+  margin: 0;
+}
+
+.reveal pre code {
+  display: block;
+  overflow: auto;
+  font-family: var(--deck-font-mono);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--deck-code-text);
+  white-space: pre;
+}
+
+.reveal blockquote {
+  max-width: 40ch;
+  padding: 1.2rem 1.35rem;
+  border-left: 4px solid var(--deck-accent);
+  border-radius: var(--deck-radius-sm);
+  background: var(--deck-accent-soft);
+}
+
+.reveal table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid var(--deck-border);
+  border-radius: var(--deck-radius-md);
+  background: var(--deck-surface);
+}
+
+.reveal th,
+.reveal td {
+  padding: 0.85rem 0.95rem;
+  border-bottom: 1px solid var(--deck-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.reveal th {
+  background: var(--deck-table-header);
+  font-weight: 700;
+}
+
+.reveal tr:last-child td {
+  border-bottom: 0;
+}
+
+.reveal figure {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.reveal img,
+.reveal svg {
+  display: block;
+  max-width: 100%;
+  max-height: 52vh;
+  border-radius: var(--deck-radius-md);
+  box-shadow: var(--deck-shadow);
+  object-fit: contain;
+}
+
+.reveal hr {
+  width: 100%;
+  height: 1px;
+  border: 0;
+  background: var(--deck-border);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--deck-muted);
+}
+
+.eyebrow::before {
+  content: "";
+  width: 2.4rem;
+  height: 0.2rem;
+  border-radius: 999px;
+  background: var(--deck-gradient-accent);
+}
+
+.lede {
+  max-width: 26ch;
+  font-size: clamp(1.4rem, 1.8vw, 2rem);
+  color: var(--deck-muted);
+}
+
+.muted {
+  color: var(--deck-muted);
+}
+
+.flow-stack {
+  display: grid;
+  gap: var(--deck-space-4);
+  align-content: start;
+}
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid var(--deck-border);
+  background: var(--deck-accent-soft);
+  font-size: 0.95rem;
+  color: var(--deck-text);
+}
+
+.surface {
+  border: 1px solid var(--deck-border);
+  border-radius: var(--deck-radius-md);
+  background: var(--deck-surface);
+  box-shadow: var(--deck-shadow);
+}
+
+.slide-heading {
+  display: grid;
+  gap: var(--deck-space-3);
+  max-width: 24ch;
+}
+
+.split-layout {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: var(--deck-space-5);
+  align-items: stretch;
+  min-height: 0;
+}
+
+.split-layout > * {
+  min-width: 0;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--deck-space-4);
+}
+
+.card {
+  padding: 1.4rem 1.5rem;
+  border: 1px solid var(--deck-border);
+  border-radius: var(--deck-radius-md);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent), var(--deck-surface);
+}
+
+.card h3 {
+  margin-bottom: 0.6rem;
+}
+
+.card p {
+  color: var(--deck-muted);
+  font-size: 1.05rem;
+}
+
+.checklist {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.checklist li {
+  position: relative;
+  padding-left: 1.8rem;
+}
+
+.checklist li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: -0.03em;
+  color: var(--deck-secondary);
+  font-size: 1.2em;
+}
+
+.metric-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.metric {
+  padding: 1.15rem 1.2rem;
+  border-radius: var(--deck-radius-sm);
+  border: 1px solid var(--deck-border);
+  background: var(--deck-panel);
+}
+
+.metric strong {
+  display: block;
+  font-size: 2rem;
+  margin-bottom: 0.35rem;
+}
+
+.metric span {
+  color: var(--deck-muted);
+  font-size: 0.95rem;
+}
+
+.callout {
+  padding: 1.4rem 1.5rem;
+  border-left: 4px solid var(--deck-accent);
+  border-radius: var(--deck-radius-sm);
+  background: var(--deck-accent-soft);
+}
+
+.callout p {
+  font-size: 1.1rem;
+}
+
+.code-panel {
+  padding: 1.2rem;
+  border: 1px solid var(--deck-border);
+  border-radius: var(--deck-radius-md);
+  background: var(--deck-code-background);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.speaker-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: max-content;
+  padding: 1rem 1.2rem;
+  border-radius: var(--deck-radius-md);
+  border: 1px solid var(--deck-border);
+  background: rgba(7, 14, 28, 0.55);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--deck-shadow);
+}
+
+[data-theme="light"] .speaker-card {
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.speaker-card .avatar {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 999px;
+  background: var(--deck-gradient-accent);
+  color: #08111f;
+  font-weight: 800;
+}
+
+.speaker-card .meta {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.speaker-card .meta strong {
+  font-size: 1.05rem;
+}
+
+.speaker-card .meta span {
+  font-size: 0.95rem;
+  color: var(--deck-muted);
+}
+
+.title-slide {
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.title-slide h1 {
+  max-width: 10ch;
+  background: var(--deck-gradient-hero);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.title-slide .hero-block {
+  display: grid;
+  gap: var(--deck-space-4);
+  max-width: 20ch;
+}
+
+.title-slide .speaker-card {
+  margin-top: var(--deck-space-2);
+}
+
+.section-divider,
+.demo-transition,
+.closing-slide {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.section-divider .slide-heading,
+.demo-transition .slide-heading,
+.closing-slide .slide-heading {
+  justify-items: center;
+  max-width: 20ch;
+}
+
+.section-divider h2,
+.demo-transition h2,
+.closing-slide h2 {
+  background: var(--deck-gradient-hero);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.section-divider .surface,
+.closing-panel {
+  max-width: 60rem;
+}
+
+.content-slide {
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.content-slide .slide-heading,
+.two-column .slide-heading,
+.code-slide .slide-heading {
+  max-width: 26ch;
+}
+
+.demo-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1.1rem;
+  border-radius: 999px;
+  background: var(--deck-gradient-accent);
+  color: #08111f;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.92rem;
+}
+
+.closing-panel {
+  display: grid;
+  gap: var(--deck-space-4);
+  padding: 1.8rem 2rem;
+  border: 1px solid var(--deck-border);
+  border-radius: var(--deck-radius-lg);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent), var(--deck-surface);
+  box-shadow: var(--deck-shadow);
+}
+
+.closing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.9rem;
+}
+
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 10rem;
+  padding: 0.9rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: var(--deck-gradient-accent);
+  color: #08111f;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.button-link.secondary {
+  border-color: var(--deck-border);
+  background: var(--deck-surface);
+  color: var(--deck-text);
+}
+
+.fragment {
+  opacity: 0.3;
+  transform: translateY(10px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.fragment.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+aside.notes {
+  display: none !important;
+}
+
+.deck-chrome {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.7rem 0.55rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid var(--deck-border);
+  background: rgba(8, 17, 31, 0.54);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--deck-shadow);
+}
+
+[data-theme="light"] .deck-chrome {
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.deck-status {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--deck-muted);
+  font-size: 0.92rem;
+}
+
+.deck-status strong {
+  color: var(--deck-text);
+  font-size: 0.95rem;
+}
+
+.deck-button {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  background: var(--deck-surface);
+  color: var(--deck-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.deck-button[aria-pressed="true"] {
+  border-color: var(--deck-border);
+  background: var(--deck-accent-soft);
+}
+
+.deck-progress {
+  position: absolute;
+  inset: auto 0 0;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.deck-progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--deck-gradient-accent);
+  transition: width 180ms ease;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal .slides > section,
+  .fragment,
+  .deck-progress span {
+    transition: none;
+  }
+}
+
+@media (max-width: 1200px) {
+  .reveal::before {
+    inset: 0.85rem;
+    border-radius: 28px;
+  }
+
+  .reveal .slides > section {
+    padding: 4.2rem 4.2rem 4.8rem;
+  }
+
+  .split-layout,
+  .card-grid,
+  .metric-strip {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .reveal .slides > section {
+    padding: 4rem 2.4rem 4.75rem;
+  }
+
+  .deck-chrome {
+    left: 1rem;
+    right: 1rem;
+    justify-content: space-between;
+  }
+
+  .deck-status {
+    min-width: 0;
+  }
+
+  .deck-status strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media print {
+  body {
+    overflow: visible;
+  }
+
+  .reveal::before,
+  .deck-chrome,
+  .deck-progress {
+    display: none !important;
+  }
+
+  .reveal .slides > section {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+    min-height: 100vh;
+    page-break-after: always;
+  }
+}
+
+  </style>
+</head>
+<body data-theme="dark">
+  <div class="reveal" data-deck-title="Ship a clear talk">
+    <div class="deck-chrome" aria-label="Presentation status and controls">
+      <div class="deck-status">
+        <strong>Ship a clear talk</strong>
+        <span id="slide-counter" aria-live="polite">1 / 3</span>
+      </div>
+      <button class="deck-button" id="theme-toggle" type="button" aria-label="Toggle theme">Dark</button>
+      <button class="deck-button" id="speaker-view" type="button" aria-label="Open speaker notes">Notes</button>
+    </div>
+
+    <div class="slides">
+      <section class="title-slide present is-active" data-slide-type="title">
+        <div class="hero-block">
+          <p class="eyebrow">Minimal talk · presentation-skill/v1</p>
+          <h1>Ship a clear talk</h1>
+          <p class="lede">From brief to browser-ready deck.</p>
+          <div class="cluster">
+            <span class="tag">Bruno Capuano</span>
+            <span class="tag">Demo day</span>
+            <span class="tag">10 minutes</span>
+            <span class="tag">Developers</span>
+          </div>
+        </div>
+
+        <div class="speaker-card">
+          <div class="avatar" aria-hidden="true">BC</div>
+          <div class="meta">
+            <strong>Practical and upbeat</strong>
+            <span>Objective: show how one Markdown file becomes a presentation deck.</span>
+          </div>
+        </div>
+
+        <aside class="notes">
+          <p>Open with the promise: one source file in, one <code>slides.html</code> out.</p>
+          <p>Tell the audience this format stays easy to edit in any client.</p>
+        </aside>
+      </section>
+
+      <section class="content-slide future" data-slide-type="content">
+        <div class="slide-heading">
+          <p class="eyebrow">Why this format works</p>
+          <h2>Portable by contract, not by luck</h2>
+          <p class="lede">The structure stays simple enough for humans and explicit enough for generators.</p>
+        </div>
+
+        <div class="split-layout">
+          <div class="flow-stack">
+            <ul class="checklist">
+              <li><strong>YAML carries deck-wide metadata.</strong></li>
+              <li class="fragment"><strong>Markdown keeps the content readable in any editor.</strong></li>
+              <li class="fragment"><strong>Slide separators keep the structure obvious.</strong></li>
+              <li class="fragment"><strong>The output stays focused on one portable artifact:</strong> <code>slides.html</code>.</li>
+            </ul>
+
+            <blockquote>
+              The repo owns the contract. The generated deck just makes that contract presentable.
+            </blockquote>
+          </div>
+
+          <div class="flow-stack">
+            <div class="metric-strip">
+              <div class="metric">
+                <strong>1</strong>
+                <span>Source file to author</span>
+              </div>
+              <div class="metric">
+                <strong>3</strong>
+                <span>Slides in the minimal example</span>
+              </div>
+              <div class="metric">
+                <strong>0</strong>
+                <span>Required post-generation fixes</span>
+              </div>
+            </div>
+
+            <article class="card">
+              <h3>Presenter-friendly output</h3>
+              <p>Built-in notes, keyboard navigation, and a theme toggle travel with the deck instead of living in a hidden tool surface.</p>
+            </article>
+
+            <div class="code-panel">
+              <pre><code>---
+title: Ship a clear talk
+speaker: Bruno Capuano
+theme: default-dark
+---
+
+# Ship a clear talk
+
+From brief to browser-ready deck</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          <p>Stress portability over clever syntax.</p>
+          <p>Point out that the repo owns the contract, not a hidden prompt.</p>
+        </aside>
+      </section>
+
+      <section class="closing-slide future" data-slide-type="closing">
+        <div class="closing-panel">
+          <span class="demo-pill">Thanks</span>
+          <div class="slide-heading">
+            <p class="eyebrow">Closing</p>
+            <h2>Questions?</h2>
+            <p class="lede">One Markdown file becomes one deck you can still edit five minutes before showtime.</p>
+          </div>
+          <p>That is the whole pitch: keep the authoring contract explicit and keep the output calm enough to present without cleanup.</p>
+          <div class="closing-actions">
+            <a class="button-link secondary" href="#/1">Back to title</a>
+          </div>
+        </div>
+
+        <aside class="notes">
+          <p>End with the practical takeaway: the deck is only useful if it still feels editable and dependable when the presenter is under pressure.</p>
+        </aside>
+      </section>
+    </div>
+
+    <div class="deck-progress" aria-hidden="true">
+      <span id="deck-progress-bar"></span>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.querySelector(".reveal");
+      if (!root) {
+        return;
+      }
+
+      const slidesContainer = root.querySelector(".slides");
+      const progressBar = document.getElementById("deck-progress-bar");
+      const counter = document.getElementById("slide-counter");
+      const themeToggle = document.getElementById("theme-toggle");
+      const speakerButton = document.getElementById("speaker-view");
+      const notesWindowName = "presentation-speaker-view";
+      const storageKey = "presentation-skill-theme";
+      const eventHandlers = new Map();
+      const defaultConfig = {
+        controls: false,
+        progress: true,
+        hash: true,
+        keyboard: true,
+        center: false,
+        slideNumber: true
+      };
+      const state = {
+        bound: false,
+        config: { ...defaultConfig },
+        currentIndex: 0,
+        initialized: false,
+        notesTimer: null,
+        notesWindow: null,
+        slides: [],
+        startTime: Date.now()
+      };
+
+      if (!slidesContainer) {
+        return;
+      }
+
+      function getSlides() {
+        return Array.from(slidesContainer.children).filter(child => child.tagName === "SECTION");
+      }
+
+      function safeStorageGet(key) {
+        try {
+          return window.localStorage ? window.localStorage.getItem(key) : null;
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function safeStorageSet(key, value) {
+        try {
+          if (window.localStorage) {
+            window.localStorage.setItem(key, value);
+          }
+        } catch (error) {
+          // Ignore storage errors. The deck still works without persistence.
+        }
+      }
+
+      function getSlideTitle(slide) {
+        const heading = slide ? slide.querySelector("h1, h2, h3") : null;
+        return heading ? heading.textContent.trim() : "Untitled slide";
+      }
+
+      function getNotesMarkup(slide) {
+        const notes = slide ? slide.querySelector("aside.notes") : null;
+        return notes ? notes.innerHTML.trim() : "<p>No presenter notes for this slide.</p>";
+      }
+
+      function fragmentsFor(slide) {
+        return slide ? Array.from(slide.querySelectorAll(".fragment")) : [];
+      }
+
+      function visibleFragmentCount(slide) {
+        return fragmentsFor(slide).filter(fragment => fragment.classList.contains("visible")).length;
+      }
+
+      function emit(name, detail) {
+        const handlers = eventHandlers.get(name) || [];
+        handlers.forEach(handler => {
+          try {
+            handler(detail);
+          } catch (error) {
+            console.error(error);
+          }
+        });
+        root.dispatchEvent(new CustomEvent(name, { detail }));
+      }
+
+      function updateThemeButton() {
+        if (!themeToggle) {
+          return;
+        }
+        const currentTheme = document.body.dataset.theme === "light" ? "light" : "dark";
+        const nextTheme = currentTheme === "light" ? "dark" : "light";
+        themeToggle.textContent = currentTheme === "light" ? "Light" : "Dark";
+        themeToggle.setAttribute("aria-pressed", currentTheme === "light" ? "true" : "false");
+        themeToggle.setAttribute("aria-label", `Switch to ${nextTheme} theme`);
+      }
+
+      function setTheme(mode, persist = true) {
+        const nextTheme = mode === "light" ? "light" : "dark";
+        document.body.dataset.theme = nextTheme;
+        if (persist) {
+          safeStorageSet(storageKey, nextTheme);
+        }
+        updateThemeButton();
+        renderNotesWindow();
+        emit("themechanged", { theme: nextTheme });
+      }
+
+      function toggleTheme() {
+        setTheme(document.body.dataset.theme === "light" ? "dark" : "light");
+      }
+
+      function updateChrome() {
+        const total = state.slides.length || 1;
+        const currentSlide = state.slides[state.currentIndex] || null;
+        if (counter) {
+          counter.textContent = `${state.currentIndex + 1} / ${total}`;
+          counter.setAttribute("aria-label", `Slide ${state.currentIndex + 1} of ${total}: ${getSlideTitle(currentSlide)}`);
+        }
+        if (progressBar) {
+          const percent = total === 1 ? 100 : (state.currentIndex / (total - 1)) * 100;
+          progressBar.style.width = state.config.progress ? `${percent}%` : "0%";
+          if (progressBar.parentElement) {
+            progressBar.parentElement.hidden = !state.config.progress;
+          }
+        }
+      }
+
+      function setHash(index) {
+        if (!state.config.hash) {
+          return;
+        }
+        const hash = `#/${index + 1}`;
+        if (window.location.hash === hash) {
+          return;
+        }
+        try {
+          if (history.replaceState) {
+            history.replaceState(null, "", hash);
+            return;
+          }
+        } catch (error) {
+          // Fall back to direct hash updates for file-based decks.
+        }
+        {
+          window.location.hash = hash;
+        }
+      }
+
+      function formatElapsed() {
+        const totalSeconds = Math.max(0, Math.floor((Date.now() - state.startTime) / 1000));
+        const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
+        const seconds = (totalSeconds % 60).toString().padStart(2, "0");
+        return `${minutes}:${seconds}`;
+      }
+
+      function speakerThemeCss(mode) {
+        if (mode === "light") {
+          return [
+            "body{margin:0;font-family:Segoe UI,Aptos,Arial,sans-serif;background:#f8fafc;color:#122033;}",
+            "main{min-height:100vh;display:grid;grid-template-columns:1.1fr .9fr;}",
+            "section,aside{padding:28px 32px;}",
+            "section{border-right:1px solid rgba(84,101,124,.22);background:#ffffff;}",
+            "aside{display:grid;gap:18px;align-content:start;background:#eef4fb;}",
+            "p{margin:0;line-height:1.45;}",
+            "h1{margin:0 0 18px;font-size:34px;line-height:1.05;}",
+            ".label{margin:0 0 8px;color:#1550af;text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;}",
+            ".value{font-size:22px;}",
+            ".notes{font-size:20px;line-height:1.5;}",
+            ".meta{font-size:18px;color:#54657c;}",
+            "code{font-family:Cascadia Code,Consolas,monospace;background:rgba(15,23,42,.06);padding:.12em .32em;border-radius:6px;}"
+          ].join("");
+        }
+        return [
+          "body{margin:0;font-family:Segoe UI,Aptos,Arial,sans-serif;background:#0f172a;color:#f8fafc;}",
+          "main{min-height:100vh;display:grid;grid-template-columns:1.1fr .9fr;}",
+          "section,aside{padding:28px 32px;}",
+          "section{border-right:1px solid rgba(148,163,184,.2);background:#111c31;}",
+          "aside{display:grid;gap:18px;align-content:start;background:#0b1323;}",
+          "p{margin:0;line-height:1.45;}",
+          "h1{margin:0 0 18px;font-size:34px;line-height:1.05;}",
+          ".label{margin:0 0 8px;color:#7dd3fc;text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;}",
+          ".value{font-size:22px;}",
+          ".notes{font-size:20px;line-height:1.5;}",
+          ".meta{font-size:18px;color:#cbd5e1;}",
+          "code{font-family:Cascadia Code,Consolas,monospace;background:rgba(148,163,184,.14);padding:.12em .32em;border-radius:6px;}"
+        ].join("");
+      }
+
+      function ensureNotesWindow() {
+        if (!state.notesWindow || state.notesWindow.closed) {
+          return false;
+        }
+
+        const doc = state.notesWindow.document;
+        if (doc.getElementById("speaker-current-title")) {
+          return true;
+        }
+
+        doc.write(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Speaker view</title>
+  <style id="speaker-theme"></style>
+</head>
+<body>
+  <main>
+    <section>
+      <p class="label">Current slide</p>
+      <h1 id="speaker-current-title"></h1>
+      <div id="speaker-current-notes" class="notes"></div>
+    </section>
+    <aside>
+      <div>
+        <p class="label">Deck status</p>
+        <p id="speaker-slide-count" class="value"></p>
+      </div>
+      <div>
+        <p class="label">Elapsed</p>
+        <p id="speaker-elapsed" class="value"></p>
+      </div>
+      <div>
+        <p class="label">Up next</p>
+        <p id="speaker-next-title" class="value"></p>
+      </div>
+      <div>
+        <p class="label">Fragments</p>
+        <p id="speaker-fragments" class="meta"></p>
+      </div>
+      <div>
+        <p class="label">Shortcuts</p>
+        <p class="meta">Arrow keys move, <code>S</code> opens notes, <code>T</code> toggles theme, <code>F</code> toggles fullscreen.</p>
+      </div>
+    </aside>
+  </main>
+</body>
+</html>`);
+        doc.close();
+        return true;
+      }
+
+      function renderNotesWindow() {
+        if (!ensureNotesWindow()) {
+          return;
+        }
+
+        const doc = state.notesWindow.document;
+        const currentSlide = state.slides[state.currentIndex] || null;
+        const nextSlide = state.slides[state.currentIndex + 1] || null;
+        doc.getElementById("speaker-theme").textContent = speakerThemeCss(document.body.dataset.theme === "light" ? "light" : "dark");
+        doc.getElementById("speaker-current-title").textContent = getSlideTitle(currentSlide);
+        doc.getElementById("speaker-current-notes").innerHTML = getNotesMarkup(currentSlide);
+        doc.getElementById("speaker-slide-count").textContent = `Slide ${state.currentIndex + 1} of ${state.slides.length}`;
+        doc.getElementById("speaker-elapsed").textContent = formatElapsed();
+        doc.getElementById("speaker-next-title").textContent = nextSlide ? getSlideTitle(nextSlide) : "End of deck";
+        doc.getElementById("speaker-fragments").textContent = `${visibleFragmentCount(currentSlide)} revealed of ${fragmentsFor(currentSlide).length}`;
+        doc.title = `${getSlideTitle(currentSlide)} — speaker view`;
+      }
+
+      function ensureNotesTimer() {
+        if (state.notesTimer) {
+          return;
+        }
+        state.notesTimer = window.setInterval(() => {
+          if (!state.notesWindow || state.notesWindow.closed) {
+            window.clearInterval(state.notesTimer);
+            state.notesTimer = null;
+            state.notesWindow = null;
+            return;
+          }
+          renderNotesWindow();
+        }, 1000);
+      }
+
+      function openSpeakerWindow() {
+        state.notesWindow = window.open("", notesWindowName, "width=1280,height=720");
+        if (!state.notesWindow) {
+          return;
+        }
+        ensureNotesWindow();
+        ensureNotesTimer();
+        renderNotesWindow();
+      }
+
+      function revealNextFragment(slide) {
+        const nextFragment = fragmentsFor(slide).find(fragment => !fragment.classList.contains("visible"));
+        if (!nextFragment) {
+          return false;
+        }
+        nextFragment.classList.add("visible");
+        emit("fragmentshown", { fragment: nextFragment, slide });
+        renderNotesWindow();
+        return true;
+      }
+
+      function hideLastFragment(slide) {
+        const visibleFragments = fragmentsFor(slide).filter(fragment => fragment.classList.contains("visible"));
+        const lastFragment = visibleFragments[visibleFragments.length - 1];
+        if (!lastFragment) {
+          return false;
+        }
+        lastFragment.classList.remove("visible");
+        emit("fragmenthidden", { fragment: lastFragment, slide });
+        renderNotesWindow();
+        return true;
+      }
+
+      function goTo(index, options = {}) {
+        const previousSlide = state.slides[state.currentIndex] || null;
+        const boundedIndex = Math.max(0, Math.min(index, state.slides.length - 1));
+        state.currentIndex = boundedIndex;
+
+        state.slides.forEach((slide, slideIndex) => {
+          slide.classList.toggle("present", slideIndex === boundedIndex);
+          slide.classList.toggle("is-active", slideIndex === boundedIndex);
+          slide.classList.toggle("past", slideIndex < boundedIndex);
+          slide.classList.toggle("future", slideIndex > boundedIndex);
+          slide.setAttribute("aria-hidden", slideIndex === boundedIndex ? "false" : "true");
+          slide.setAttribute("data-slide-number", String(slideIndex + 1));
+          slide.setAttribute("role", "group");
+          slide.setAttribute("aria-label", `Slide ${slideIndex + 1} of ${state.slides.length}: ${getSlideTitle(slide)}`);
+          if (slideIndex !== boundedIndex && !options.preserveFragments) {
+            fragmentsFor(slide).forEach(fragment => fragment.classList.remove("visible"));
+          }
+        });
+
+        if (!options.skipHash) {
+          setHash(boundedIndex);
+        }
+        updateChrome();
+        renderNotesWindow();
+        emit("slidechanged", {
+          currentSlide: state.slides[boundedIndex] || null,
+          indexh: boundedIndex,
+          previousSlide
+        });
+      }
+
+      function next() {
+        if (revealNextFragment(state.slides[state.currentIndex])) {
+          return;
+        }
+        goTo(state.currentIndex + 1);
+      }
+
+      function prev() {
+        if (hideLastFragment(state.slides[state.currentIndex])) {
+          return;
+        }
+        goTo(state.currentIndex - 1);
+      }
+
+      function startFromHash() {
+        const match = window.location.hash.match(/^#\/(\d+)(?:\/(\d+))?$/);
+        return match ? Math.max(0, Math.min(parseInt(match[1], 10) - 1, state.slides.length - 1)) : 0;
+      }
+
+      function handleKeydown(event) {
+        if (!state.config.keyboard || event.altKey || event.ctrlKey || event.metaKey) {
+          return;
+        }
+
+        const target = event.target;
+        if (target && /^(INPUT|TEXTAREA|SELECT)$/i.test(target.tagName)) {
+          return;
+        }
+
+        switch (event.key) {
+          case "ArrowRight":
+          case "PageDown":
+          case " ":
+          case "j":
+          case "J":
+          case "n":
+          case "N":
+            event.preventDefault();
+            next();
+            break;
+          case "ArrowLeft":
+          case "PageUp":
+          case "k":
+          case "K":
+          case "p":
+          case "P":
+            event.preventDefault();
+            prev();
+            break;
+          case "Home":
+            event.preventDefault();
+            goTo(0);
+            break;
+          case "End":
+            event.preventDefault();
+            goTo(state.slides.length - 1);
+            break;
+          case "f":
+          case "F":
+            event.preventDefault();
+            if (document.fullscreenElement) {
+              document.exitFullscreen();
+            } else {
+              document.documentElement.requestFullscreen?.();
+            }
+            break;
+          case "s":
+          case "S":
+            event.preventDefault();
+            openSpeakerWindow();
+            break;
+          case "t":
+          case "T":
+            event.preventDefault();
+            toggleTheme();
+            break;
+          default:
+            break;
+        }
+      }
+
+      function bindEventsOnce() {
+        if (state.bound) {
+          return;
+        }
+        window.addEventListener("hashchange", () => goTo(startFromHash(), { skipHash: true }));
+        document.addEventListener("keydown", handleKeydown);
+        themeToggle?.addEventListener("click", toggleTheme);
+        speakerButton?.addEventListener("click", openSpeakerWindow);
+        state.bound = true;
+      }
+
+      const api = {
+        initialize(options = {}) {
+          state.config = { ...defaultConfig, ...state.config, ...options };
+          state.slides = getSlides();
+          if (!state.slides.length) {
+            return Promise.resolve(api);
+          }
+
+          bindEventsOnce();
+          const storedTheme = safeStorageGet(storageKey);
+          setTheme(storedTheme || document.body.dataset.theme || "dark", false);
+          goTo(startFromHash(), { skipHash: !state.config.hash });
+          root.dataset.ready = "true";
+          if (!state.initialized) {
+            emit("ready", { currentSlide: state.slides[state.currentIndex], indexh: state.currentIndex });
+          }
+          state.initialized = true;
+          return Promise.resolve(api);
+        },
+        configure(options = {}) {
+          state.config = { ...state.config, ...options };
+          updateChrome();
+          return api;
+        },
+        getConfig() {
+          return { ...state.config };
+        },
+        getCurrentSlide() {
+          return state.slides[state.currentIndex] || null;
+        },
+        getIndices() {
+          return {
+            f: visibleFragmentCount(state.slides[state.currentIndex]),
+            h: state.currentIndex,
+            v: 0
+          };
+        },
+        getRevealElement() {
+          return root;
+        },
+        getSlides() {
+          return state.slides.slice();
+        },
+        getTotalSlides() {
+          return state.slides.length;
+        },
+        isReady() {
+          return state.initialized;
+        },
+        layout() {
+          updateChrome();
+          return api;
+        },
+        next,
+        on(name, handler) {
+          const handlers = eventHandlers.get(name) || [];
+          handlers.push(handler);
+          eventHandlers.set(name, handlers);
+          return api;
+        },
+        off(name, handler) {
+          const handlers = eventHandlers.get(name) || [];
+          eventHandlers.set(name, handlers.filter(candidate => candidate !== handler));
+          return api;
+        },
+        prev,
+        slide(index) {
+          if (typeof index === "number") {
+            goTo(index);
+          }
+          return api;
+        },
+        sync() {
+          state.slides = getSlides();
+          goTo(Math.min(state.currentIndex, state.slides.length - 1), { skipHash: !state.config.hash, preserveFragments: true });
+          return api;
+        },
+        toggleTheme
+      };
+
+      window.Reveal = api;
+      api.initialize();
+    })();
+  </script>
+</body>
+</html>
