@@ -3,6 +3,7 @@ import os from 'os';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const defaultCliRoot = path.join(__dirname, '..', '..');
 
 export function getConfigDir() {
   return path.join(os.homedir(), '.md2slides');
@@ -17,7 +18,7 @@ export function getSkillDir(repoRoot = process.cwd()) {
 }
 
 export function getCLIRoot() {
-  return path.join(__dirname, '..', '..');
+  return process.env.MD2SLIDES_PACKAGE_ROOT || defaultCliRoot;
 }
 
 export function getPackageJsonPath() {

@@ -6,7 +6,19 @@ The default install path for `md-to-slides` is still:
 npm install md-to-slides
 ```
 
-Use the options on this page only if you specifically want a portable `.copilot/skills/presentation-skill/` folder or a source-based install flow.
+For a local dependency install, run the packaged CLI with:
+
+```bash
+npx md2slides init
+```
+
+If you install the package globally, or your environment already exposes local npm bins on `PATH`, that same step can be:
+
+```bash
+md2slides init
+```
+
+Use the options on this page only if you specifically want a portable `.copilot/skills/presentation-skill/` folder without going through the packaged CLI, or you want a source-based install flow.
 
 ## When to use these options
 

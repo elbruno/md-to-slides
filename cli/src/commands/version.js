@@ -1,12 +1,8 @@
 import { Command } from 'commander';
 import { logger } from '../lib/logger.js';
-import { readFileSync } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { getInstalledVersion } from '../lib/config.js';
 import { getSkillDir } from '../lib/paths.js';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import { getRuntimePackageVersion } from '../lib/runtime-package.js';
 
 export const versionCommand = new Command()
   .name('version')
@@ -14,9 +10,7 @@ export const versionCommand = new Command()
   .option('--check-updates', 'Check if updates are available')
   .action(async (options) => {
     try {
-      const cliPackagePath = path.join(__dirname, '..', '..', 'package.json');
-      const cliPackage = JSON.parse(readFileSync(cliPackagePath, 'utf-8'));
-      const cliVersion = cliPackage.version;
+      const cliVersion = getRuntimePackageVersion();
 
       const skillDir = getSkillDir();
       let skillVersion = await getInstalledVersion(skillDir);

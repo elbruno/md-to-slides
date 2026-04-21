@@ -7,13 +7,14 @@ import { versionCommand } from './commands/version.js';
 import { doctorCommand } from './commands/doctor.js';
 import { generateCommand } from './commands/generate.js';
 import { serveCommand } from './commands/serve.js';
+import { getRuntimePackageVersion } from './lib/runtime-package.js';
 
 const program = new Command();
 
 program
   .name('md2slides')
   .description('CLI tool for managing md-to-slides presentation skill')
-  .version('1.0.0');
+  .version(getRuntimePackageVersion());
 
 program.addCommand(initCommand);
 program.addCommand(updateCommand);

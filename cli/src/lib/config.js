@@ -2,8 +2,9 @@ import fs from 'fs/promises';
 import path from 'path';
 import { logger } from './logger.js';
 import { getConfigDir } from './paths.js';
+import { getRuntimePackageVersion } from './runtime-package.js';
 
-const CONFIG_VERSION = '1.0.0';
+const CONFIG_VERSION = getRuntimePackageVersion();
 
 export async function initializeConfig() {
   const configDir = getConfigDir();

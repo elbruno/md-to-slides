@@ -119,9 +119,10 @@ function validateCLIVersion() {
   section('4. Testing version command');
 
   try {
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
     const output = execSync(`node ${cliPath} --version`, { encoding: 'utf-8' });
 
-    if (output.includes('1.0.0')) {
+    if (output.includes(packageJson.version)) {
       success('Version output contains version number');
     } else {
       error('Version output missing or unexpected');
@@ -139,10 +140,13 @@ function validateCLIUsage() {
 
     if (output.includes('md2slides') || output.includes('Commands:')) {
       success('CLI displays help when run without arguments');
+      success('CLI runs without crashing');
     }
   } catch (err) {
-    // No arguments may exit with error, which is ok
-    if (err.status === 0 || err.stdout) {
+    const combinedOutput = `${err.stdout || ''}${err.stderr || ''}`;
+
+    if (combinedOutput.includes('md2slides') || combinedOutput.includes('Commands:')) {
+      success('CLI displays help when run without arguments');
       success('CLI runs without crashing');
     } else {
       error(`CLI crashed: ${err.message}`);
@@ -156,8 +160,7 @@ function validateDirectoryStructure() {
   const requiredDirs = [
     'src',
     'src/commands',
-    'src/lib',
-    'bin'
+    'src/lib'
   ];
 
   for (const dir of requiredDirs) {

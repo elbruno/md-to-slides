@@ -1,62 +1,97 @@
 # Repository structure
 
-This repository stays shallow on purpose. You should be able to understand the package from the root without hunting through framework folders.
+This repository stays intentionally shallow so a new contributor can understand it from the root.
 
-## Top-level directories
+## Top-level layout
+
+```text
+md-to-slides/
+├── cli/                # Separate md2slides CLI workspace
+├── docs/               # Installation, architecture, testing, publishing
+├── examples/           # Checked-in Markdown inputs and generated decks
+├── scripts/            # Repo maintenance helpers such as screenshot capture
+├── skill/              # Portable skill contract and integration guidance
+├── templates/          # Reusable HTML shell and CSS theme primitives
+├── tests/              # Root validation harness and fixtures
+├── README.md           # GitHub-facing entry point
+└── package.json        # Root package metadata and validation scripts
+```
+
+## Directory guide
 
 | Path | Purpose | Owner | Notes |
-|---|---|---|---|
-| `skill/` | Stores the reusable skill contract and skill input examples. | Rusty | This is the user-facing authoring entry point. |
-| `templates/` | Stores the HTML and CSS building blocks used to shape `slides.html`. | Linus | Keep these reusable and presentation-focused. |
-| `examples/` | Stores example source material and generated deck outputs. | Shared, with Basher owning packaging examples | Use this folder to teach by example. |
-| `docs/` | Stores repository, usage, and publishing guidance. | Basher | Keep docs practical and publish-ready. |
-| `.github/` | Stores GitHub-specific automation and agent metadata. | Repo support | Useful for workflows and repo integration. |
-| `.copilot/` | Stores local Copilot skill references and helper guidance. | Repo support | Helps local tooling and agent behavior. |
-| `.squad/` | Stores team coordination history, decisions, and agent context. | Squad support | Not part of the shipped skill package. |
+| --- | --- | --- | --- |
+| `cli/` | Houses the reusable `md2slides` CLI implementation. | Shared CLI work | Root package now ships a thin wrapper that delegates here. |
+| `skill/` | Stores the reusable skill contract and skill-facing guidance. | Rusty | This is the authoring contract users follow. |
+| `templates/` | Stores the HTML and CSS deck primitives used to shape `slides.html`. | Linus | Keep this presentation-focused and reusable. |
+| `examples/` | Stores source material and finished reference decks. | Shared | Show the workflow by example. |
+| `docs/` | Stores install, architecture, testing, and publishing docs. | Basher | Keep docs short, direct, and linked from the README. |
+| `tests/` | Stores the root validation harness and fixtures. | Livingston | Guards the shipped minimal example. |
+| `scripts/` | Stores helper scripts for repo maintenance. | Shared | Current example: screenshot generation. |
+| `.github/` | Stores GitHub workflows and automation metadata. | Repo support | CI and repo automation live here. |
+| `.copilot/` | Stores local Copilot skill references and helper guidance. | Repo support | Local tooling support only. |
+| `.squad/` | Stores team history, decisions, and agent context. | Squad support | Never treat this as shipped package content. |
 
-## Directory contracts
+## Folder contracts
 
 ### `skill/`
 
-Use `skill/` for the portable skill itself:
+Use `skill/` for:
 
-- `SKILL.md`
-- input examples
-- contract-facing instructions
+- the portable contract
+- skill-facing instructions
+- integration notes
 
-Do not use this folder for generated HTML or visual assets.
+Do not put generated decks or screenshots here.
 
 ### `templates/`
 
-Use `templates/` for deck primitives:
+Use `templates/` for:
 
 - base HTML shell
-- shared CSS tokens
-- syntax highlighting styles
+- shared theme CSS
+- reusable presentation primitives
 
-Do not turn this into a general app source folder.
+Do not turn this into a generic app source tree.
 
 ### `examples/`
 
-Use `examples/` to show the system working:
+Use `examples/` for:
 
-- example authoring inputs
-- generated output decks
+- example `input.md` sources
+- checked-in `slides.html` outputs
 - publishable demo assets
 
-Examples should explain the workflow by doing the work, not by describing it in the abstract.
+Examples should prove the workflow by doing the work.
 
 ### `docs/`
 
-Use `docs/` for pages that help someone install, understand, publish, or extend the repository. These pages should stay short, direct, and easy to scan.
+Use `docs/` for pages that explain:
 
-## Working rule for this repository
+- installation
+- architecture
+- testing
+- publishing
+- automation
 
-When you add something new, place it in the folder that matches what a new user would expect:
+Keep details here, not in the main README.
 
-- authoring contract in `skill/`
-- rendering building blocks in `templates/`
-- proof and samples in `examples/`
+### `tests/`
+
+Use `tests/` for:
+
+- repo-root validation harnesses
+- fixtures that lock expected behavior
+- regression coverage for shipped examples
+
+## Working rule
+
+Place new content where a first-time reader would expect to find it:
+
+- contract in `skill/`
+- rendering primitives in `templates/`
+- proof in `examples/`
 - explanation in `docs/`
+- validation in `tests/`
 
-That folder contract keeps the repository obvious and keeps publishing simple.
+That keeps the repository obvious and keeps the README focused on onboarding.

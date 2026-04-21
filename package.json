@@ -1,8 +1,11 @@
 {
   "name": "md-to-slides",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A skill for GitHub Copilot and Claude Code that turns Markdown presentation outlines into self-contained HTML decks",
   "license": "MIT",
+  "bin": {
+    "md2slides": "./bin/md2slides.js"
+  },
   "repository": {
     "type": "git",
     "url": "github:elbruno/md-to-slides"
@@ -20,6 +23,9 @@
     "ai-agent"
   ],
   "files": [
+    "bin/",
+    "cli/package.json",
+    "cli/src/",
     "skill/",
     "templates/",
     "examples/",
@@ -42,5 +48,11 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "commander": "^11.1.0",
+    "ora": "^8.2.0",
+    "tar": "^7.5.13"
   }
 }

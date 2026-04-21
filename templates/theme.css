@@ -528,8 +528,9 @@ button:focus-visible {
 }
 
 .title-slide {
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
+  text-align: center;
 }
 
 .title-slide h1 {
@@ -540,15 +541,28 @@ button:focus-visible {
   color: transparent;
 }
 
+.title-slide > .flow-stack,
 .title-slide .hero-block {
   display: grid;
   gap: var(--deck-space-4);
-  width: min(100%, 30rem);
-  max-width: 30rem;
+  width: min(100%, 38rem);
+  max-width: 38rem;
+  justify-items: center;
 }
 
 .title-slide .speaker-card {
+  align-self: center;
   margin-top: var(--deck-space-2);
+}
+
+.title-slide ul {
+  list-style: none;
+  padding-left: 0;
+  justify-items: center;
+}
+
+.title-slide .cluster {
+  justify-content: center;
 }
 
 .section-divider,

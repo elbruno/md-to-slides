@@ -1,87 +1,56 @@
 # Quickstart
 
-If you want to consume the published package in another repo, start there:
+## Intended onboarding path
 
 ```bash
 npm install md-to-slides
+npx md2slides init
 ```
 
-Try this:
+Run those commands at the root of the repository where you want to use the skill.
+
+The same CLI also works as `md2slides init` when the package is installed globally or your environment exposes local npm binaries on `PATH`.
+
+## Current package reality
+
+The published root `md-to-slides` package now includes:
+
+- the shipped skill files under `node_modules/md-to-slides/`
+- the `md2slides` CLI wrapper, which reuses the implementation in `cli/src/`
+
+## Direct-file usage
+
+If you prefer not to materialize `.copilot/skills/presentation-skill/`, point your AI agent at the package files directly:
+
+- `node_modules/md-to-slides/skill/contract.md`
+- `node_modules/md-to-slides/templates/reveal-base.html`
+- `node_modules/md-to-slides/templates/theme.css`
+
+Example prompt:
 
 ```text
-Use `skill/contract.md`, `examples/minimal-talk/input.md`, `templates/reveal-base.html`, and `templates/theme.css` to produce a `slides.html` deck, then run `npm test` from the repo root.
+Use `node_modules/md-to-slides/skill/contract.md`, `node_modules/md-to-slides/templates/reveal-base.html`, and `node_modules/md-to-slides/templates/theme.css` to create `slides.html` from my Markdown outline.
 ```
 
-This repo already includes one complete reference path: a source deck in Markdown and the generated HTML deck beside it.
+## Working in this repository
 
-## Before you start
-
-You need:
-
-- Node.js and npm
-- a browser to open `slides.html`
-- GitHub Copilot or Claude Code if you want to regenerate the deck instead of only reviewing the checked-in example
-
-If you installed from npm, use the same files from `node_modules/md-to-slides/`. The rest of this page is for working in this repository itself.
-
-## 1. Start at the repo root
-
-Run the root check first:
+If you are contributing in this repo, start with:
 
 ```bash
 npm test
 ```
 
-Today that command verifies the expected example files from the root. If Livingston's validation harness exists at `tests/validate-example.mjs`, the same command runs it automatically against the minimal example.
-
-## 2. Read the source contract
-
-Open these files in order:
+Then review these files in order:
 
 1. `skill/contract.md`
 2. `examples/minimal-talk/input.md`
 3. `examples/minimal-talk/slides.html`
 
-That sequence shows the full v1 flow:
-
-- the contract
-- the source Markdown
-- the generated deck
-
-## 3. Regenerate the minimal example
-
-The repo does not ship a standalone generator CLI. Generation is driven by the skill contract and template files.
-
-From the repo root, use a prompt like this in GitHub Copilot or Claude Code:
-
-```text
-Using `skill/contract.md`, `templates/reveal-base.html`, and `templates/theme.css`, create `examples/minimal-talk/slides.html` from `examples/minimal-talk/input.md`.
-```
-
-Keep the output self-contained and write it beside the source file.
-
-## 4. Validate from the root again
-
-After you regenerate the deck, run:
-
-```bash
-npm run validate:example
-```
-
-This keeps the root workflow simple: source and output live under `examples/`, while validation starts from the repo root.
-
-## 5. Open the deck
-
-Open `examples/minimal-talk/slides.html` in your browser.
-
-Use the checked-in example to confirm that your regenerated deck still preserves:
-
-- slide order
-- speaker notes
-- Markdown headings and lists
-- the self-contained single-file output
+That gives you the contract, the source, and the shipped output in one pass.
 
 ## Next steps
 
-- Read `docs/repository-structure.md` to keep new examples in the expected folders.
-- Read `docs/publishing.md` for the current release and package distribution model.
+- [install-options.md](install-options.md)
+- [architecture-overview.md](architecture-overview.md)
+- [repository-structure.md](repository-structure.md)
+- [testing.md](testing.md)

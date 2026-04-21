@@ -1,45 +1,66 @@
 # Automation & Workflows
 
-## Screenshot Generation
+## GitHub Actions
 
-Preview screenshots for README and documentation are auto-generated using Puppeteer.
+The main README no longer carries workflow detail. This page is the place for automation and CI notes.
+
+### Deck Builder workflow
+
+The repository includes `.github/workflows/deck-builder.yml`.
+
+That workflow:
+
+- triggers on Markdown changes in pushes and pull requests
+- checks out the repository
+- sets up Node.js
+- installs the portable skill files into `.copilot/skills/presentation-skill/`
+- detects Markdown files that may need deck generation
+- validates any generated `slides.html` files it finds
+- can commit generated decks on pushes to `main`
+- can comment on pull requests with deck links
+
+It is a template for automation around agent-driven deck generation, not a replacement for the skill contract itself.
+
+### Squad state sync
+
+The repository also includes `.github/workflows/auto-sync.yml`.
+
+It:
+
+- runs every 6 hours
+- checks for uncommitted changes in `.squad/`
+- commits and pushes if needed
+- skips silently if nothing changed
+
+## Screenshot generation
+
+Preview screenshots for README and documentation are generated with Puppeteer.
 
 ### Running Locally
 ```bash
 npm run screenshots
 ```
 
-This captures the first slide of each example deck at 1920x1080 resolution and saves to `docs/screenshots/`.
+This captures the configured preview slide for each example deck at 1920x1080 resolution and saves to `docs/screenshots/`.
 
 ### When to Regenerate
 - After adding new example decks
 - After updating example deck content or styling
 - Before publishing README updates
 
-## Auto-sync Workflow
-
-The repository includes a GitHub Actions workflow (`.github/workflows/auto-sync.yml`) that automatically syncs squad state.
-
-### What It Does
-- Runs every 6 hours (00:00, 06:00, 12:00, 18:00 UTC)
-- Checks for uncommitted changes in `.squad/` directory
-- Auto-commits and pushes if changes exist
-- Skips silently if no changes
-
-### Purpose
-Keeps team decisions, session logs, and squad workspace state backed up to GitHub without manual intervention.
-
-### Manual Trigger
-The workflow can also be triggered manually via GitHub Actions UI using the "workflow_dispatch" event.
-
 ## Benefits
 
-**Screenshot Automation:**
+**GitHub Actions:**
+- Keeps deck automation details out of the main onboarding path
+- Makes CI behavior discoverable in one place
+- Separates agent workflow guidance from install guidance
+
+**Screenshot automation:**
 - Consistent preview quality
 - Easy to update when examples change
 - Automated via npm scripts
 
-**Squad State Sync:**
+**Squad state sync:**
 - No lost work from forgotten commits
 - Automatic backup of session state
 - Clean commit history with `[skip ci]` flag
