@@ -26,104 +26,7 @@ Use those files directly with your AI agent:
 Use `node_modules/md-to-slides/skill/contract.md`, `node_modules/md-to-slides/templates/reveal-base.html`, and `node_modules/md-to-slides/templates/theme.css` to create `slides.html` from my Markdown outline.
 ```
 
-### Optional: portable skill folder install
-
-If you specifically want this skill copied into `.copilot/skills/presentation-skill/`, use the portable install options in [Installation (Advanced)](#installation-advanced). That path is still supported, but the published npm package is the default starting point for new projects.
-
-## Installation (Advanced)
-
-This skill works with **GitHub Copilot** and **Claude Code**. Both clients support portable skills.
-
-### For npm-based usage
-
-1. Install the published package:
-   ```bash
-   npm install md-to-slides
-   ```
-2. Reference the packaged files from your prompts:
-   - `node_modules/md-to-slides/skill/contract.md`
-   - `node_modules/md-to-slides/templates/reveal-base.html`
-   - `node_modules/md-to-slides/templates/theme.css`
-    - `node_modules/md-to-slides/examples/`
-3. Generate `slides.html` in your own repo beside the Markdown source file.
-
-### Portable skill folder setup (Optional)
-
-Use this only if you want the files copied into `.copilot/skills/presentation-skill/` instead of consuming the published npm package directly.
-
-#### GitHub-hosted installer
-
-**macOS/Linux/WSL:**
-```bash
-curl -sL https://raw.githubusercontent.com/elbruno/md-to-slides/main/install.sh | bash
-```
-
-**Windows (PowerShell):**
-```powershell
-powershell -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/elbruno/md-to-slides/main/install.ps1' -OutFile 'install.ps1'; & './install.ps1'; Remove-Item 'install.ps1'"
-```
-
-Or clone the repo and run locally (from the repository root):
-```bash
-# macOS/Linux/WSL
-./install.sh
-
-# Windows (PowerShell)
-powershell -ExecutionPolicy Bypass -File install.ps1
-```
-
-#### One-liner archive install
-
-If you prefer a single command without saving the script:
-
-```bash
-# macOS/Linux/WSL
-curl -sL https://github.com/elbruno/md-to-slides/archive/main.tar.gz | tar xz --strip-components=1 --wildcards "*/skill" "*/templates" "*/examples" && mkdir -p .copilot/skills/presentation-skill && mv skill/* templates examples .copilot/skills/presentation-skill/ && rmdir skill
-
-# Windows (PowerShell)
-Invoke-WebRequest -Uri "https://github.com/elbruno/md-to-slides/archive/main.zip" -OutFile main.zip; Expand-Archive main.zip -DestinationPath .; New-Item -ItemType Directory -Force .copilot/skills/presentation-skill; Move-Item md-to-slides-main/skill/*,md-to-slides-main/templates,md-to-slides-main/examples .copilot/skills/presentation-skill/ -Force; Remove-Item main.zip,md-to-slides-main -Recurse
-```
-
-**What gets installed:**
-- `skill/` — contract and AI guidance files (required)
-- `templates/` — HTML/CSS deck primitives (required)
-- `examples/` — reference decks (optional, but recommended for your agent)
-
-#### Manual repo clone for GitHub Copilot
-
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/elbruno/md-to-slides.git
-   ```
-
-2. Copy the skill directory into your workspace:
-   ```bash
-   mkdir -p .copilot/skills/presentation-skill
-   cp -r md-to-slides/skill/* .copilot/skills/presentation-skill/
-   cp -r md-to-slides/templates .copilot/skills/presentation-skill/
-   cp -r md-to-slides/examples .copilot/skills/presentation-skill/
-   ```
-
-3. Open GitHub Copilot and reference the skill when creating presentations.
-
-#### Manual repo clone for Claude Code
-
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/elbruno/md-to-slides.git
-   ```
-
-2. Copy the skill directory into your workspace:
-   ```bash
-   mkdir -p .copilot/skills/presentation-skill
-   cp -r md-to-slides/skill/* .copilot/skills/presentation-skill/
-   cp -r md-to-slides/templates .copilot/skills/presentation-skill/
-   cp -r md-to-slides/examples .copilot/skills/presentation-skill/
-   ```
-
-3. Invoke Claude Code and reference the skill when creating presentations.
-
-The skill reads `skill/contract.md` to understand the Markdown format, uses `templates/` for the HTML/CSS foundation, and refers to `examples/` for reference decks.
+If you specifically want a portable `.copilot/skills/presentation-skill/` install, GitHub-hosted installer scripts, archive/manual setup, or a local clone-based install, see [docs/install-options.md](docs/install-options.md).
 
 ## Using in GitHub Actions
 
@@ -168,13 +71,13 @@ The agent will create `input.md` (source) and `slides.html` (output) in your wor
 
 Here's what the skill generates. Each example deck is a single HTML file ready to present:
 
-### Minimal Talk
-[![Minimal Talk Preview](docs/screenshots/minimal-talk-preview.png)](examples/minimal-talk/slides.html)
+| Minimal Talk | Technical Talk |
+| --- | --- |
+| [![Minimal Talk Preview](docs/screenshots/minimal-talk-preview.png)](examples/minimal-talk/slides.html)<br>Clean starter deck. [Open →](examples/minimal-talk/slides.html) | [![Technical Talk Preview](docs/screenshots/technical-talk-preview.png)](examples/technical-talk/slides.html)<br>Code-heavy engineering presentation. [Open →](examples/technical-talk/slides.html) |
 
-A simple, clean starter deck demonstrating the core slide types and basic structure. [View full deck →](examples/minimal-talk/slides.html)
-
-### Coming Soon
-Additional example decks (technical talk, executive pitch, workshop tutorial) are being added to showcase different presentation styles and advanced features.
+| Executive Pitch | Workshop Tutorial |
+| --- | --- |
+| [![Executive Pitch Preview](docs/screenshots/executive-pitch-preview.png)](examples/executive-pitch/slides.html)<br>Concise business-facing narrative. [Open →](examples/executive-pitch/slides.html) | [![Workshop Tutorial Preview](docs/screenshots/workshop-preview.png)](examples/workshop-tutorial/slides.html)<br>Hands-on teaching flow with guided steps. [Open →](examples/workshop-tutorial/slides.html) |
 
 ## Agent Integration Examples
 
@@ -249,7 +152,7 @@ md-to-slides/
 
 ## Usage
 
-1. **Install the npm package or clone the repository** and use the workflow shown above.
+1. **Install the npm package** and use the workflow shown above.
 2. **Write or generate a Markdown source file** following `skill/contract.md`.
 3. **Run the skill via your AI agent** to create `slides.html`.
 4. **Open in a browser**—keyboard navigation, presenter mode, and PDF export work out of the box.

@@ -176,9 +176,32 @@
 ### Changes applied
 - Updated `scripts/capture-screenshots.js` so example screenshots can target a specific preview slide.
 - Set `minimal-talk` to capture slide 2, which shows the balanced split-layout instead of the sparse title slide.
+- Widened the title-slide hero block in `templates/theme.css` and the checked-in example decks so opening slides do not collapse into an overly narrow left rail.
 - Corrected the workshop screenshot source directory mapping from `workshop` to `workshop-tutorial`.
 
 ### Learnings
 - README/gallery screenshots should use representative slides, not blindly default to slide 1.
 - Title slides can be intentionally asymmetric for presentation rhythm and still be poor preview-card assets.
+
+## Session: Install Docs Split (2026-04-22)
+
+### Documentation changes applied
+- Simplified `README.md` so the main getting-started path stays npm-first and only shows `npm install md-to-slides`.
+- Moved portable skill-folder, installer-script, archive, and clone-based install guidance into `docs/install-options.md`.
+- Added a direct README link to the new install-options page so advanced users can still find non-npm paths quickly.
+
+### Learnings
+- README install sections stay cleaner when secondary distribution paths live in a dedicated docs page instead of competing with the default npm flow.
+- Post-publish docs should treat portable `.copilot/skills/` setup as an advanced option, not a co-equal primary entry point.
+
+## Session: README Visual Examples Alignment (2026-04-22)
+
+### Documentation changes applied
+- Replaced the stale README "Coming Soon" placeholder in the Visual Examples section with live preview cards for minimal, technical, executive, and workshop example decks.
+- Kept the update confined to the README gallery area so the simplified Getting Started flow stayed untouched.
+- Pointed each screenshot directly at its checked-in `examples/*/slides.html` deck for GitHub-friendly scanning.
+
+### Learnings
+- README example galleries read better on GitHub when all available decks appear as compact linked preview cards instead of mixed prose and placeholders.
+- Visual-example copy should mirror the checked-in screenshot set exactly so docs do not lag behind regenerated assets.
 

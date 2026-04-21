@@ -2,21 +2,29 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
 
-async function captureScreenshot(htmlPath, outputPath, deckName) {
-  console.log(`Capturing screenshot for ${deckName}...`);
+async function captureScreenshot(htmlPath, outputPath, deckName, previewSlide = 1) {
+  console.log(`Capturing screenshot for ${deckName} (slide ${previewSlide})...`);
   
   const browser = await puppeteer.launch({ headless: 'new' });
   const page = await browser.newPage();
   
   await page.setViewport({ width: 1920, height: 1080 });
   
-  const htmlContent = fs.readFileSync(htmlPath, 'utf8');
   const fileUrl = `file://${htmlPath.replace(/\\/g, '/')}`;
+  const targetUrl = previewSlide > 1 ? `${fileUrl}#/${previewSlide}` : fileUrl;
   
-  await page.goto(fileUrl, { waitUntil: 'networkidle0' });
+  await page.goto(targetUrl, { waitUntil: 'networkidle0' });
   
   // Wait for Reveal.js to initialize
   await page.waitForSelector('.reveal', { timeout: 5000 });
+  await page.waitForFunction(
+    expectedSlide => {
+      const counter = document.getElementById('slide-counter');
+      return counter && counter.textContent.trim().startsWith(`${expectedSlide} /`);
+    },
+    { timeout: 5000 },
+    previewSlide
+  );
   await new Promise(resolve => setTimeout(resolve, 1000));
   
   // Capture screenshot
@@ -39,10 +47,10 @@ async function main() {
   }
   
   const examples = [
-    { name: 'minimal-talk', dir: 'minimal-talk', title: 'Minimal Talk' },
+    { name: 'minimal-talk', dir: 'minimal-talk', title: 'Minimal Talk', previewSlide: 2 },
     { name: 'technical-talk', dir: 'technical-talk', title: 'Technical Talk' },
     { name: 'executive-pitch', dir: 'executive-pitch', title: 'Executive Pitch' },
-    { name: 'workshop', dir: 'workshop', title: 'Workshop Tutorial' }
+    { name: 'workshop', dir: 'workshop-tutorial', title: 'Workshop Tutorial' }
   ];
   
   for (const example of examples) {
@@ -56,7 +64,7 @@ async function main() {
     const outputPath = path.join(screenshotsDir, `${example.name}-preview.png`);
     
     try {
-      await captureScreenshot(htmlPath, outputPath, example.title);
+      await captureScreenshot(htmlPath, outputPath, example.title, example.previewSlide);
     } catch (error) {
       console.error(`Error capturing ${example.name}:`, error.message);
     }

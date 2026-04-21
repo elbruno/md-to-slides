@@ -18,7 +18,7 @@ This folder holds the portable contract for the presentation skill. The contract
 | `skill/claude-code.md` | Shows the Claude Code prompt pattern for the contract. | Yes |
 | `.copilot/skills/presentation-skill/SKILL.md` | Wires the same workflow into GitHub Copilot skill format. | Copilot-only wrapper |
 
-The contract matters more than the wrapper. If the repo name or skill name changes later, the authoring flow should still stay the same.
+The contract matters more than the wrapper. The published npm package name is `md-to-slides`, but the authoring flow should stay the same anywhere you copy these files.
 
 ## How the package maps to this repo
 

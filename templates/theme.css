@@ -533,7 +533,7 @@ button:focus-visible {
 }
 
 .title-slide h1 {
-  max-width: 10ch;
+  max-width: 12ch;
   background: var(--deck-gradient-hero);
   -webkit-background-clip: text;
   background-clip: text;
@@ -543,7 +543,8 @@ button:focus-visible {
 .title-slide .hero-block {
   display: grid;
   gap: var(--deck-space-4);
-  max-width: 20ch;
+  width: min(100%, 30rem);
+  max-width: 30rem;
 }
 
 .title-slide .speaker-card {

@@ -9,6 +9,10 @@
 
 - Quality needs to cover both valid file output and presentation usability.
 - Reference repos imply `slides.html` should be a stable, expected artifact.
+- Screenshot validation currently follows the root workflow: `npm test` for the checked-in minimal deck, then `npm run screenshots` for visual previews.
+- In this Windows environment, `npm run screenshots` needed `PUPPETEER_EXECUTABLE_PATH` pointed at system Chrome because Puppeteer's bundled browser was not installed.
+- Current visual-example rendering looks acceptable for content slides: no browser console errors, no horizontal overflow at 1920×1080, and the regenerated previews now cover minimal, technical, executive, and workshop decks.
+- Residual doc mismatch: README still shows only the minimal preview and says the other decks are "Coming Soon" even though the screenshot assets now exist.
 
 ## Team Status (2026-04-21 08:51)
 
