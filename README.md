@@ -11,8 +11,13 @@ A skill for GitHub Copilot and Claude Code that turns Markdown presentation outl
 
 The package now ships the `md2slides` CLI alongside the skill assets.
 
-1. `npm install md-to-slides`
-2. Run the packaged CLI from your project root:
+1. Install the cli tool
+
+```bash
+npm install md-to-slides
+```
+
+1. Run the packaged CLI from your project root:
 
 ```bash
 npx md2slides init
@@ -24,7 +29,7 @@ If you install the package globally, or your environment already exposes local n
 md2slides init
 ```
 
-If you want direct-file usage, portable skill installs, or other setup variants, use the docs linked below instead of the main onboarding path.
+at the root of your repo. If you want direct-file usage, portable skill installs, or other setup variants, use the docs linked below instead of the main onboarding path.
 
 ## Learn the workflow
 
