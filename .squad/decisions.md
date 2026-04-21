@@ -649,4 +649,55 @@ Automatically runs:
 **v2 (Q3 2026):** GitHub Marketplace submission
 **v3 (Future):** GitHub Skills Registry / Claude Marketplace
 
-Full research: .squad/decisions/inbox/danny-installation-ux.md`n
+Full research: .squad/decisions/inbox/danny-installation-ux.md
+
+---
+
+### 10. NPM Publish Prep Applied (Basher, 2026-04-21)
+
+**Status:** ✅ Implemented
+**Decision:** Apply npm-publish prep edits to package.json per npm-publish-guidance.md
+
+**Package Name Choice:** `md-to-slides` (unscoped)
+- ✅ Verified available on npm registry (404 response confirms not taken)
+- Chose unscoped over scoped for: cleaner name, better discoverability, no overhead for public utility package
+- Can migrate to scoped (@elbruno/md-to-slides) later if needed
+
+**Edits Applied:**
+1. ✅ Removed `"private": true` line — publishing unblocked
+2. ✅ Added `"files"` allowlist (9 entries):
+   - `skill/`, `templates/`, `examples/`, `scripts/`, `docs/`
+   - `install.sh`, `install.ps1`, `README.md`, `LICENSE`
+3. ✅ Added `"prepublishOnly": "npm test"` — prevents publishing broken builds
+4. ✅ Added `"engines": {"node": ">=18"}` — reflects modern Node.js usage in codebase
+
+**Verification:**
+- **npm pack --dry-run:** ✅ 27 files, 619 kB packed, 848.6 kB unpacked
+  - Includes: All skill files, templates, examples, docs, install scripts
+  - Excludes: .squad/, tests/, .github/, node_modules/, package-lock.json
+- **npm test:** ✅ All 11 checks passed
+- **Largest file:** docs/screenshots/minimal-talk-preview.png (547.6 kB, 64% of tarball — acceptable for visual docs)
+
+**Team Conventions Established:**
+For future npm-publishable packages:
+1. Prefer unscoped names when available (smaller, better discoverability)
+2. Use `files` array allowlist (not .npmignore) — more secure, clearer
+3. Always add `prepublishOnly: "npm test"` — safety hook prevents broken publishes
+4. Dry-run with `npm pack --dry-run` before first publish
+5. Set explicit `engines` constraints matching actual usage
+
+**Publishing Instructions for Bruno:**
+```bash
+npm login                 # First time only
+npm pack --dry-run       # Verify contents
+npm publish              # Publish to npm registry
+git tag v1.0.0           # Tag release
+git push --tags          # Push tags to GitHub
+npm view md-to-slides    # Verify published package
+```
+
+**Notes:**
+- No `--access public` flag needed (unscoped packages default to public)
+- prepublishOnly hook will auto-run `npm test` before publish
+- Version 1.0.0 already set in package.json
+- Package ready to ship immediately

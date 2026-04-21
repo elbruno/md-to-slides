@@ -9,6 +9,12 @@
 
 - `C:\src\260418-globalazurespain-plan\slides\keynote\slides.html` is a concrete Reveal.js-style reference deck.
 - Session materials in the reference repos treat `slides.html` as a stable deliverable alongside code and prompts.
+- **npm Publish Prep Applied (2026-04-21 15:56:34 UTC):**
+  - ✅ All template files confirmed included in npm publish allowlist
+  - ✅ `templates/reveal-base.html` and `templates/theme.css` both included (27 files, 619 kB verified)
+  - ✅ No internal team files leaked (.squad/, tests/, .github/ all excluded)
+  - ✅ Generated decks will travel with the package when users `npm install md-to-slides`
+  - **Status:** Your CSS and HTML system is ready for distribution; no changes needed
 
 ## Team Status (2026-04-21 08:51)
 

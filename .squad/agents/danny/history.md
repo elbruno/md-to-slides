@@ -24,6 +24,14 @@
   - Dry-run validation passes but actual publish blocked until 2FA verified
   - Two paths to resolve: (1) Complete browser 2FA via `npm login`, or (2) Create automation token with 2FA bypass
   - Package ready: 7.0 kB tarball, 15 files, clean structure; version 1.2.0 not yet on registry
+- **npm Publish Prep Applied (2026-04-21 15:56:34 UTC):**
+  - ✅ Package name `md-to-slides` verified available on npm registry (unscoped, cleaner, better discoverability)
+  - ✅ Removed `"private": true` flag — publishing unblocked
+  - ✅ Added `files` allowlist (9 entries: skill/, templates/, examples/, scripts/, docs/, install scripts, README, LICENSE)
+  - ✅ Added `prepublishOnly: "npm test"` safety hook
+  - ✅ Added `engines: {node: ">=18"}` floor constraint
+  - ✅ Verified: npm pack --dry-run (27 files, 619 kB, zero file leakage), npm test (11/11 passed)
+  - **Status:** Package ready for Bruno to run `npm publish` immediately
 
 ## Team Status (2026-04-21 08:51)
 

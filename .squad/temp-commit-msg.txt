@@ -1,0 +1,10 @@
+Scribe: Merge npm-publish-prep decision, update cross-agent context
+
+- Merge Basher's npm-publish-prep decision into canonical decisions.md
+- Delete merged inbox file (basher-npm-publish-prep.md)
+- Create orchestration log: 2026-04-21T15-56-34-basher.md
+- Create session log: 2026-04-21T15-56-34-npm-publish-prep.md
+- Propagate publish-readiness update to Danny's and Linus's history files
+- Package ready for Bruno to run `npm publish`
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>

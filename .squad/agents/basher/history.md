@@ -83,3 +83,58 @@ Initial npm CLI package scaffolding for `md2slides` command-line tool to enable 
 - Commands are stubs awaiting Livingston's implementation; architecture is complete
 - No issues discovered; framework selection aligns with Node.js ecosystem best practices
 - Ready for production pipeline once commands are implemented
+## Learnings — NPM Publishing Guidance (2026-04-21)
+
+**Task:** Provided Bruno with a comprehensive npm publishing guide for md-to-slides package.
+
+**Key Blockers Identified:**
+1. `"private": true` in package.json — this hard-blocks publishing, must be removed or set to false
+2. Missing `files` allowlist — without it, npm would publish everything (including .squad/, tests/, node_modules/ if not in .gitignore)
+3. Name availability — `md-to-slides` may be taken; recommended scoped name `@elbruno/md-to-slides` as safer default
+
+**Recommendations Given:**
+- Use `files` array allowlist instead of .npmignore (allowlist > denylist for security and clarity)
+- Add `prepublishOnly: "npm test"` script to prevent publishing broken builds
+- Always dry-run with `npm pack --dry-run` before real publish
+- For scoped packages, use `npm publish --access public` on first publish
+- Tag releases in git for version history: `git tag v1.0.0 && git push --tags`
+
+**Decision:** Recommended scoped package name (@elbruno/) and files allowlist as project conventions for npm distribution.
+
+---
+
+## NPM Publish Prep Applied (2026-04-21)
+
+**Task:** Applied the npm-publish prep edits to package.json per npm-publish-guidance.md
+
+**Name Availability Check:**
+- ✅ `md-to-slides` — AVAILABLE (404 on npm registry)
+- ✅ `@elbruno/md-to-slides` — AVAILABLE (404 on npm registry)
+- **Choice:** Used unscoped `md-to-slides` (cleaner, available, better discoverability)
+
+**Edits Applied:**
+1. ✅ Removed `"private": true` line
+2. ✅ Added `"files"` allowlist array (9 entries: skill/, templates/, examples/, scripts/, docs/, install.sh, install.ps1, README.md, LICENSE)
+3. ✅ Added `"prepublishOnly": "npm test"` script
+4. ✅ Added `"engines": {"node": ">=18"}` field
+
+**Verification:**
+- **npm pack --dry-run:** 27 files, 619.0 kB packed, 848.6 kB unpacked
+  - ✅ Excludes: .squad/, tests/, .github/, node_modules/, package-lock.json
+  - ✅ Includes: All skill files, templates, examples, docs, install scripts, README, LICENSE
+- **npm test:** ✅ All 11 checks passed
+
+**Surprises:**
+- Screenshot PNG is 547.6 kB of the tarball (64% of package size) — acceptable for visual documentation
+- No unexpected files in tarball; allowlist pattern worked perfectly
+- prepublishOnly hook will guard against accidental broken publishes
+
+---
+
+## Post-Task Orchestration (2026-04-21T11:51:47Z)
+
+✅ **Scribe Completed:**
+- Orchestration log written: `.squad/orchestration-log/2026-04-21T11-51-47-basher.md`
+- Session log written: `.squad/log/2026-04-21T11-51-47-npm-publish-guide.md`
+- Decision inbox: Empty (no new decisions to merge)
+- History updated with completion marker
