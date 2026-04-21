@@ -196,3 +196,36 @@ Initial npm CLI package scaffolding for `md2slides` command-line tool to enable 
 - **GitHub README verified:** Shows only `npx md2slides init` in Getting Started step 2—no duplicate line
 
 **Result:** Fix is now live on GitHub. All users pulling from `origin/main` receive the corrected onboarding flow.
+
+## npm Badge Row for README (2026-04-22)
+
+**Task:** Add npm package badges to README near the top for visual status, version, downloads, and link to package page.
+
+**Badges added (README line 5-8):**
+1. **Version badge** → links to npm package page
+2. **Downloads badge** (monthly) → links to npm package page
+3. **License badge** → links to LICENSE file
+4. **GitHub stars badge** → links to GitHub repo
+
+**Design decision:** Compact flat-square style, all with direct links to relevant pages. Placed right after description (before Getting Started) to maximize early visibility without cluttering top.
+
+**Verification:**
+- ✅ All npm test checks pass (11/11)
+- ✅ README renders cleanly with badges above Getting Started
+- ✅ Links point to correct endpoints (npmjs.com package page, repo, LICENSE)
+- ✅ No build or test regressions
+
+- ✅ Links point to correct endpoints (npmjs.com package page, repo, LICENSE)
+- ✅ No build or test regressions
+
+**Result:** README now signals project maturity and package status at a glance. New users see version, popularity metrics, and license immediately.
+
+## Cross-Team Badge Decision Merged (2026-04-22T17:03:26Z)
+
+**Scribe orchestration completed:**
+- Badge decision merged from inbox to canonical `decisions.md` (Decision #16)
+- Orchestration log written: `.squad/orchestration-log/2026-04-22T17-03-26Z-basher-badges.md`
+- Session log written: `.squad/log/2026-04-22T17-03-26Z-badge-update.md`
+- Git: `.squad/` changes staged and committed
+- Status: All workflows complete; team memory synchronized
+

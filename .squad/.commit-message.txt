@@ -1,0 +1,10 @@
+docs: Merge badge decision #16 and orchestration logs (2026-04-22T17:03:26Z)
+
+Scribe session: Process npm badge row decision from Basher
+- Orchestration log: .squad/orchestration-log/2026-04-22T17-03-26Z-basher-badges.md
+- Session log: .squad/log/2026-04-22T17-03-26Z-badge-update.md
+- Decision #16 merged: README npm badge row (version, downloads, license, stars)
+- Inbox cleared: basher-npm-badges.md deleted after merge
+- Basher history updated with cross-team merge marker
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>

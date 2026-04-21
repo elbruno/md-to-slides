@@ -554,6 +554,45 @@ npm view md-to-slides    # Verify published package
 
 ---
 
+### 16. README npm Badge Row (Basher, 2026-04-22)
+
+**Status:** ✅ Implemented  
+**Decision:** Add compact badge row to README immediately after description showing package status, version, downloads, and links.
+
+**Badges Added (4 total):**
+1. **Version badge** — `shields.io` version badge showing current npm version (1.1.0)
+   - Points to: https://www.npmjs.com/package/md-to-slides
+   
+2. **Monthly Downloads badge** — Community adoption signal
+   - Points to: https://www.npmjs.com/package/md-to-slides
+   
+3. **License badge** — MIT license indicator
+   - Points to: Local LICENSE file in repository
+   
+4. **GitHub Stars badge** — Repository engagement metric
+   - Points to: https://github.com/elbruno/md-to-slides
+
+**Design Rationale:**
+- Style: Flat-square (compact, modern badge conventions)
+- Placement: After description, before Getting Started (high visibility, non-intrusive)
+- All badges linked to relevant destination pages (npm for version/downloads, GitHub for stars, LICENSE file for license)
+
+**Verification:**
+- ✅ All npm tests pass (11/11)
+- ✅ README renders cleanly in markdown renderers
+- ✅ Badge endpoints are live and respond correctly
+- ✅ No build or test regressions introduced
+- ✅ Git commit d947ef0 pushed to GitHub main
+- ✅ GitHub README now displays badge row under repo description
+
+**Impact:**
+- New visitors immediately see package maturity signals and adoption metrics
+- Badges update dynamically via shields.io endpoints (always shows current version and download stats)
+- Conveys active maintenance and community confidence
+- Direct links encourage npm package discovery and GitHub repo engagement
+
+---
+
 ## Governance
 
 - All meaningful changes require team consensus
@@ -569,7 +608,7 @@ npm view md-to-slides    # Verify published package
 - Location: `.squad/decisions-archive.md`
 - Decisions 7-15 retained as active decisions (implementation, CLI, npm publish, docs alignment, visuals)
 
-**Latest Merge:** 2026-04-21T16:58:08Z
-- Merged 8 inbox items: basher-cli-package-fix, basher-push-readme-fix, basher-readme-getting-started, linus-install-doc-split, linus-onboarding-fix, linus-readme-fix, linus-screenshot-fix, livingston-title-alignment
-- Consolidated into decisions 12-15 (deduplicated related items)
+**Latest Merge:** 2026-04-22T17:03:26Z
+- Merged 1 inbox item: basher-npm-badges
+- Added Decision 16 (README npm badge row)
 - Inbox now empty
