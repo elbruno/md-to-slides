@@ -374,6 +374,87 @@ Automatically runs:
 
 ---
 
+### 12. Root Package CLI Shim via bin/ (Basher, 2026-04-22)
+
+**Status:** ✅ Proposed
+**Decision:** Expose `md2slides` from the published root `md-to-slides` package by adding a root-level `bin` shim that delegates to the existing CLI implementation under `cli/src/`.
+
+**Rationale:**
+- Reuses existing CLI instead of creating a second implementation
+- Keeps root package focused on skill assets, docs, and packaging metadata
+- Limits publish risk by shipping only needed CLI runtime files and dependencies
+
+**Packaging Impact:**
+- Root package publishes `bin/`, `cli/src/`, and `cli/package.json`
+- Root package owns runtime dependencies required by delegated CLI
+- CLI version/config metadata resolves from invoking package
+
+**Note:** `md2slides` binary available via npm resolution for root package. Local invoke: `npx md2slides ...` recommended unless environment exposes npm bins on PATH.
+
+---
+
+### 13. README Installation Hierarchy (Basher, Linus, 2026-04-22)
+
+**Status:** ✅ Implemented
+**Decision:** Keep `npm install md-to-slides` as primary first-run path in `README.md`. Move portable skill-folder installers, one-liners, and manual clone flows under `Installation (Advanced)` as optional setup.
+
+**Rationale:**
+- New users on GitHub see published package first (decision #11 alignment)
+- Portable `.copilot/skills/` setup remains supported but not dominant
+- npm is simplest consumption path for existing projects
+- Advanced workflows preserved in dedicated docs without cluttering README
+
+**Result:**
+- `README.md` — npm-first quick start (2-step: install + init)
+- `docs/install-options.md` — portable, script, archive, and manual paths (future reference)
+- `docs/architecture-overview.md` — technical architecture details moved from README
+- `docs/repository-structure.md` — repository layout reference
+- `docs/testing.md` — root validation and CLI workspace testing
+- `docs/automation.md` — GitHub Actions detail moved from README
+
+---
+
+### 14. Screenshot & Visual Defaults (Linus, 2026-04-22)
+
+**Status:** ✅ Implemented
+**Decision:** 
+1. Support choosing representative preview slide per example (not always slide 1)
+2. Center title-slide content by default; keep content-slide headings left-aligned
+
+**Rationale:**
+- Title slides are intentionally asymmetric; look awkward as static thumbnails
+- Slide 2 of `minimal-talk` better represents the visual style when static
+- Title-slide centering improves balance without affecting content slides
+- Low-risk CSS change improves all generated decks and README screenshots
+
+**Changes Applied:**
+- `minimal-talk` captures slide 2 for preview (not slide 1)
+- `.title-slide` CSS centered in `templates/theme.css`
+- `npm test` ✅ All tests pass
+- `npm run screenshots` ✅ All previews regenerated successfully
+
+---
+
+### 15. README Getting Started Duplicate Removed (Linus, 2026-04-22)
+
+**Status:** ✅ Completed
+**Decision:** Remove duplicate `npm install md-to-slides` command from README Getting Started step 2 code block.
+
+**Problem:**
+- Step 1: "Run `npm install md-to-slides`"
+- Step 2 code block incorrectly showed the install again before `npx md2slides init`
+- Created confusion about the two-step workflow
+
+**Solution:**
+- Step 2 now shows only: `npx md2slides init`
+- Maintains npm-first onboarding pattern
+- Preserves existing wording and flow
+- Keeps README concise
+
+**Verification:** ✅ Pushed to origin/main; GitHub README verified (2026-04-22)
+
+---
+
 ### 9. Installation UX & Marketplace Strategy (Danny, 2026-04-21)
 
 **Status:** ✅ Locked
@@ -486,4 +567,9 @@ npm view md-to-slides    # Verify published package
 **Most Recent Archive:** 2026-04-22 (Decisions 1-6 from 2026-04-21)
 - Reason: Consolidated foundational architecture decisions
 - Location: `.squad/decisions-archive.md`
-- Decisions 7-11 retained as active decisions (implementation, CLI, npm publish, docs alignment)
+- Decisions 7-15 retained as active decisions (implementation, CLI, npm publish, docs alignment, visuals)
+
+**Latest Merge:** 2026-04-21T16:58:08Z
+- Merged 8 inbox items: basher-cli-package-fix, basher-push-readme-fix, basher-readme-getting-started, linus-install-doc-split, linus-onboarding-fix, linus-readme-fix, linus-screenshot-fix, livingston-title-alignment
+- Consolidated into decisions 12-15 (deduplicated related items)
+- Inbox now empty

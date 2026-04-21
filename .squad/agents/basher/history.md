@@ -183,3 +183,16 @@ Initial npm CLI package scaffolding for `md2slides` command-line tool to enable 
 - Moved GitHub-hosted installers, one-liners, and manual portable skill-folder clone instructions under an explicit optional advanced section.
 
 **Result:** The GitHub README now reads npm-first for new users while preserving portable skill-folder and local-repo setup guidance for advanced/manual workflows.
+
+## README Duplicate Install Line Fix & Push (2026-04-22T16:30Z)
+
+**Task:** Bruno reported local README was correct but origin/main still served old version with duplicate `npm install md-to-slides` line. Push local commits to update the remote.
+
+**Verification:**
+- Local HEAD: `b508d36` (2 commits ahead of origin/main at `9e230e6`)
+- Critical fix in `a2616da`: "docs: remove duplicate npm install from README Getting Started"
+- Push executed: `git push origin main` → Success (9e230e6..b508d36)
+- **origin/main now at:** `b508d36`
+- **GitHub README verified:** Shows only `npx md2slides init` in Getting Started step 2—no duplicate line
+
+**Result:** Fix is now live on GitHub. All users pulling from `origin/main` receive the corrected onboarding flow.
