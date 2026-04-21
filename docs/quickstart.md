@@ -1,5 +1,11 @@
 # Quickstart
 
+If you want to consume the published package in another repo, start there:
+
+```bash
+npm install md-to-slides
+```
+
 Try this:
 
 ```text
@@ -15,6 +21,8 @@ You need:
 - Node.js and npm
 - a browser to open `slides.html`
 - GitHub Copilot or Claude Code if you want to regenerate the deck instead of only reviewing the checked-in example
+
+If you installed from npm, use the same files from `node_modules/md-to-slides/`. The rest of this page is for working in this repository itself.
 
 ## 1. Start at the repo root
 
@@ -76,4 +84,4 @@ Use the checked-in example to confirm that your regenerated deck still preserves
 ## Next steps
 
 - Read `docs/repository-structure.md` to keep new examples in the expected folders.
-- Read `docs/publishing.md` to see what still needs to be locked before public distribution.
+- Read `docs/publishing.md` for the current release and package distribution model.

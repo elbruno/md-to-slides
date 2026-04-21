@@ -138,3 +138,48 @@ Initial npm CLI package scaffolding for `md2slides` command-line tool to enable 
 - Session log written: `.squad/log/2026-04-21T11-51-47-npm-publish-guide.md`
 - Decision inbox: Empty (no new decisions to merge)
 - History updated with completion marker
+
+---
+
+## Doc Audit After npm Publish (2026-04-21)
+
+**Task:** Audited repo documentation after npm package publication to identify install/publish messaging that still reflects pre-publish status.
+
+**Registry confirmation:**
+- ✅ `md-to-slides@1.0.0` is published on npm
+- ✅ npm metadata points back to `https://github.com/elbruno/md-to-slides`
+
+**Key findings:**
+1. `README.md` still leads with curl/PowerShell repo-download install flows and never mentions the published npm package.
+2. `docs/publishing.md` is fully outdated: it says the repo is "close to a reviewable source release," says naming is undecided, and frames publish status as future work.
+3. `docs/quickstart.md` points readers to `docs/publishing.md` for things that "still need to be locked before public distribution," which is no longer true.
+4. `install.sh` and `install.ps1` still download the GitHub main branch rather than consuming the published package, so README install guidance is now split between package reality and repo-download scripts.
+5. The install scripts validate `SKILL.md`, while current repo-facing docs describe `skill/README.md`; that inconsistency should be reconciled when install docs are updated.
+
+**Recommended handoff:**
+- Update public docs to make npm install/distribution status explicit.
+- Reframe repo download scripts as source/manual install paths unless team chooses to keep GitHub-source install as the primary user path.
+- Merge a docs decision so README, quickstart, and publishing guidance all tell the same post-publish story.
+
+## Cross-Team Update (2026-04-22T16:05:10Z)
+
+**Task:** Scribe merged docs-audit findings into post-publish docs coordination (Decision #11).
+
+**Outcome:**
+- Doc audit recommendations handed to Linus; docs updated per your guidance
+- Inbox decision (basher-doc-audit.md) merged into consolidated Decision #11
+- Your recommendation to align public docs fulfilled: all files now reference npm-first path
+- GitHub-source install guidance preserved for portable skill-folder setups
+
+**Status:** Doc alignment complete; team coordination successful.
+
+## README Getting Started Install Hierarchy (2026-04-21)
+
+**Task:** Reworked the public README install story so new users land on the published npm package instead of the older portable-skill installer flow.
+
+**What changed:**
+- Kept `npm install md-to-slides` as the primary Getting Started path.
+- Replaced the inline portable installer block in Getting Started with a short optional pointer to `Installation (Advanced)`.
+- Moved GitHub-hosted installers, one-liners, and manual portable skill-folder clone instructions under an explicit optional advanced section.
+
+**Result:** The GitHub README now reads npm-first for new users while preserving portable skill-folder and local-repo setup guidance for advanced/manual workflows.

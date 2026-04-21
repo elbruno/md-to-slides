@@ -143,3 +143,42 @@
 - No progress bar during large downloads (ora spinner available but not integrated yet)
 - GitHub API rate limiting not handled (relies on default 60 req/hour for unauthenticated)
 
+## Session: npm Docs Update (2026-04-22)
+
+### Documentation changes applied
+- Updated `README.md` to recommend `npm install md-to-slides` for package consumption while keeping direct GitHub skill installation instructions for portable `.copilot/skills/` setups.
+- Updated `docs/quickstart.md` to distinguish npm package usage from repo-root local development workflow.
+- Updated `docs/publishing.md` to reflect that `md-to-slides` is already published on npm and that GitHub remains the source of truth.
+- Updated `skill/README.md` so the shipped package documentation uses the locked npm package name.
+
+### Learnings
+- The cleanest published-package story is package consumption via `node_modules/md-to-slides/` paths, while direct GitHub install guidance still serves portable skill-folder installs.
+- Local development docs should stay repo-root oriented even after publication; release docs should explain how npm consumption and repo development differ.
+
+## Cross-Team Update (2026-04-22T16:05:10Z)
+
+**Task:** Scribe merged docs-update decisions from Basher and Linus into canonical decisions.md.
+
+**Context Propagated:**
+- Both Basher (doc audit) and Linus (doc update) decisions folded into Decision #11: Post-Publish Documentation Alignment
+- Inbox entries deduplicated: both focused on npm-first narrative while preserving GitHub-source guidance
+- All docs now tell consistent post-publish story
+- `.squad/decisions/inbox/` cleared; merged entries consolidated
+
+**Status:** Documentation coordination complete; team aligned on published-package messaging.
+
+## Session: README Screenshot Refresh (2026-04-22)
+
+### Visual issue fixed
+- The README preview was capturing the minimal deck's title slide, which is intentionally left-weighted and looked off-balance as a standalone screenshot.
+- The deck theme was fine; the marketing preview was the wrong slide to freeze.
+
+### Changes applied
+- Updated `scripts/capture-screenshots.js` so example screenshots can target a specific preview slide.
+- Set `minimal-talk` to capture slide 2, which shows the balanced split-layout instead of the sparse title slide.
+- Corrected the workshop screenshot source directory mapping from `workshop` to `workshop-tutorial`.
+
+### Learnings
+- README/gallery screenshots should use representative slides, not blindly default to slide 1.
+- Title slides can be intentionally asymmetric for presentation rhythm and still be poor preview-card assets.
+
