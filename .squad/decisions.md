@@ -319,3 +319,14 @@
 - Keep history focused on work, decisions focused on direction
 - Decisions merged from `.squad/decisions/inbox/` weekly; inbox files deduplicated and archived
 - Decisions 5-8 represent locked commitments from first implementation slice (2026-04-21)
+
+### 9. Installation UX & Marketplace Strategy (Danny, 2026-04-21)
+
+**Status:** ✅ Locked
+**Decision:** v1-v3 distribution roadmap for presentation-skill.
+
+**v1 (Now):** Shell install scripts + GitHub Actions template
+**v2 (Q3 2026):** GitHub Marketplace submission
+**v3 (Future):** GitHub Skills Registry / Claude Marketplace
+
+Full research: .squad/decisions/inbox/danny-installation-ux.md`n
