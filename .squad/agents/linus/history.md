@@ -58,3 +58,82 @@
 - Fix applies to all responsive breakpoints
 - Tested against example decks: `examples/minimal-talk/slides.html`, etc.
 - Commit: "fix: center slide content in viewport"
+
+## Session: CLI Implementation (2026-04-22)
+
+### Commands Implemented ✅
+
+**1. `md2slides init` — Initialize skill installation**
+- Downloads latest release from GitHub releases API (elbruno/md-to-slides)
+- Supports `--version` flag for pinning specific versions
+- Supports `--force` to overwrite existing installations
+- Atomic updates: creates backup before replacing, restores on failure
+- Uses `os.tmpdir()` for cross-platform temporary files (not hardcoded /tmp)
+- Config updated in `~/.md2slides/config.json` with version + timestamp
+- Clear success messaging with next steps
+
+**2. `md2slides update` — Upgrade to new version**
+- Queries GitHub releases API for latest available version
+- Compares current version (from config) against latest using semver logic
+- Skips silently if already up-to-date
+- Supports `--version` to target specific version
+- Backup-before-update atomicity ensures no data loss on download failure
+- Restores from backup automatically on error
+
+**3. `md2slides doctor` — Validate installation health**
+- Checks installation directory exists
+- Validates all required files present (skill/contract.md, templates/reveal-base.html, templates/theme.css, examples/)
+- Verifies config.json exists and is valid JSON
+- Checks installed version against latest (with offline graceful degradation)
+- Reports status: GOOD, WARNING, or ERROR with actionable fix suggestions
+- Optional `--json` flag for machine-readable output
+
+**4. `md2slides --version / version` — Show version information**
+- Displays CLI version (from package.json) and installed skill version (from config)
+- Optional `--check-updates` flag to query GitHub for available updates
+- Shows update available notification with semver comparison
+- Gracefully degrades if offline
+
+### Architecture Decisions
+
+**Path Handling (Windows + Unix):**
+- All paths use `path.join()` (not string concatenation)
+- `os.tmpdir()` for temp files (cross-platform: /tmp on Unix, %TEMP% on Windows)
+- Config always in `~/.md2slides/config.json` (home directory via `os.homedir()`)
+- Skill installed to `.copilot/skills/presentation-skill/` relative to cwd
+
+**GitHub API Integration:**
+- Direct HTTPS (no external npm deps beyond tar, chalk, commander, ora)
+- Graceful error handling: network errors → helpful messages (check internet connection)
+- Version parsing: simple semver comparison (split by '.', compare integers)
+- Offline mode: doctor command doesn't crash if GitHub unreachable; marks as "unknown (offline)"
+
+**Error Handling Pattern:**
+- Try/catch blocks with specific error classification (ENOENT, EACCES, HTTP status codes)
+- logger module uses chalk for colored output (✓, ✖, ⚠, ℹ symbols)
+- Exit code 1 on failure (following standard Unix conventions)
+- Config initialization happens on-demand; creates ~/.md2slides if missing
+
+**Atomic Updates:**
+- Before overwriting: backup existing installation with timestamp (skillDir.backup.{timestamp})
+- On download/extract failure: restores from backup automatically
+- Cleanup: removes temp extraction directory always (finally block)
+- Config updated AFTER successful installation (no partial state)
+
+**Dependencies Added:**
+- `tar@^7.0.0` for extracting .tar.gz archives (native Node.js doesn't include tar utilities)
+- All others (chalk, commander, ora) already present in cli/package.json
+
+### Testing Notes
+- `npm start -- init` successfully queries GitHub API and reports version 1.0.0
+- Error handling works: 404 on download properly caught and reported
+- `npm start -- doctor` correctly identifies missing installation and suggests fix
+- `npm start -- version` shows CLI v1.0.0, correctly notes skill not installed
+- Config file created automatically in ~/.md2slides/config.json on first read
+
+### Known Limitations (Expected for v1)
+- No `--rollback` option (can restore manually from backup dirs)
+- No automatic update checks on every command (runs only when explicitly requested)
+- No progress bar during large downloads (ora spinner available but not integrated yet)
+- GitHub API rate limiting not handled (relies on default 60 req/hour for unauthenticated)
+
