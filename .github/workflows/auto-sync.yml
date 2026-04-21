@@ -1,0 +1,63 @@
+name: Auto-sync Squad State
+
+# Auto-sync: keeping squad state in sync with GitHub
+# Runs every 6 hours to commit and push any changes in the .squad/ directory
+# This ensures session logs, decisions, and team state are always backed up
+
+on:
+  schedule:
+    # Run every 6 hours (at 00:00, 06:00, 12:00, 18:00 UTC)
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  auto-sync:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Check for .squad/ changes
+        id: check_changes
+        run: |
+          if [ -d ".squad" ]; then
+            if git diff --quiet HEAD -- .squad/; then
+              echo "has_changes=false" >> $GITHUB_OUTPUT
+              echo "No changes detected in .squad/"
+            else
+              echo "has_changes=true" >> $GITHUB_OUTPUT
+              echo "Changes detected in .squad/"
+            fi
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo ".squad/ directory does not exist"
+          fi
+      
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git add .squad/
+          git commit -m "chore: auto-sync squad state [skip ci]
+
+          Auto-sync: keeping squad state in sync with GitHub
+          - Session logs
+          - Team decisions
+          - Workspace state
+
+          Triggered by scheduled workflow at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
+      
+      - name: No changes to sync
+        if: steps.check_changes.outputs.has_changes == 'false'
+        run: echo "Skipping commit - no changes in .squad/"

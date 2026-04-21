@@ -23,6 +23,10 @@
   "scripts": {
     "check": "node -e \"const fs=require('node:fs'); const required=['skill/contract.md','templates/reveal-base.html','templates/theme.css','examples/minimal-talk/input.md','examples/minimal-talk/slides.html']; const missing=required.filter((file)=>!fs.existsSync(file)); if (missing.length) { console.error('Missing expected repo files:\\n' + missing.join('\\n')); process.exit(1); } console.log('Repo files are in place.');\"",
     "validate:example": "node -e \"const fs=require('node:fs'); const cp=require('node:child_process'); const input='examples/minimal-talk/input.md'; const output='examples/minimal-talk/slides.html'; const harness='tests/validate-example.mjs'; const required=['skill/contract.md', input, output]; const missing=required.filter((file)=>!fs.existsSync(file)); if (missing.length) { console.error('Missing expected repo files:\\n' + missing.join('\\n')); process.exit(1); } if (!fs.existsSync(harness)) { console.log('Livingston validation harness is not checked in yet. Verified the example source and deck from the repo root.'); process.exit(0); } const result=cp.spawnSync(process.execPath, [harness, input, output], { stdio: 'inherit' }); process.exit(result.status ?? 1);\"",
+    "screenshots": "node scripts/capture-screenshots.js",
     "test": "npm run check && npm run validate:example"
+  },
+  "devDependencies": {
+    "puppeteer": "^24.42.0"
   }
 }

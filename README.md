@@ -6,7 +6,26 @@ A skill for GitHub Copilot and Claude Code that turns Markdown presentation outl
 
 Give an AI agent a presentation brief or outline in Markdown. The skill generates a single `slides.html` file with embedded Reveal.js, ready to open in any browser. No build step, no external dependencies, no vendor lock-in.
 
-## Installation
+## Getting Started
+
+The fastest way to install is to copy this single command into your project root:
+
+```bash
+# One-liner installation — works on macOS/Linux/WSL
+curl -sL https://github.com/elbruno/md-to-slides/archive/main.tar.gz | tar xz --strip-components=1 --wildcards "*/skill" "*/templates" "*/examples" && mkdir -p .copilot/skills/presentation-skill && mv skill/* templates examples .copilot/skills/presentation-skill/ && rmdir skill
+
+# Windows (PowerShell)
+Invoke-WebRequest -Uri "https://github.com/elbruno/md-to-slides/archive/main.zip" -OutFile main.zip; Expand-Archive main.zip -DestinationPath .; New-Item -ItemType Directory -Force .copilot/skills/presentation-skill; Move-Item md-to-slides-main/skill/*,md-to-slides-main/templates,md-to-slides-main/examples .copilot/skills/presentation-skill/ -Force; Remove-Item main.zip,md-to-slides-main -Recurse
+```
+
+**What this installs:**
+- `skill/` — contract and AI guidance files (required)
+- `templates/` — HTML/CSS deck primitives (required)
+- `examples/` — reference decks (optional, but recommended for your agent)
+
+> 🚀 **Future:** npm package coming soon — subscribe to [releases](https://github.com/elbruno/md-to-slides/releases) to be notified!
+
+## Installation (Advanced)
 
 This skill works with **GitHub Copilot** and **Claude Code**. Both clients support portable skills.
 
@@ -56,6 +75,18 @@ Title: "Why TypeScript?" Audience: JavaScript developers. Tone: practical.
 ```
 
 The agent will create `input.md` (source) and `slides.html` (output) in your workspace.
+
+## Visual Examples
+
+Here's what the skill generates. Each example deck is a single HTML file ready to present:
+
+### Minimal Talk
+[![Minimal Talk Preview](docs/screenshots/minimal-talk-preview.png)](examples/minimal-talk/slides.html)
+
+A simple, clean starter deck demonstrating the core slide types and basic structure. [View full deck →](examples/minimal-talk/slides.html)
+
+### Coming Soon
+Additional example decks (technical talk, executive pitch, workshop tutorial) are being added to showcase different presentation styles and advanced features.
 
 ## Agent Integration Examples
 
@@ -206,3 +237,14 @@ Contributions welcome. See `docs/repository-structure.md` for the folder contrac
 MIT License. See [LICENSE](LICENSE) for full text.
 
 Copyright (c) Bruno Capuano & Contributors
+
+## 👋 About the Author
+
+**Made with ❤️ by [Bruno Capuano (ElBruno)](https://github.com/elbruno)**
+
+Bruno is a Microsoft AI MVP and developer advocate specializing in local LLMs, AI agent development, and practical AI tooling. Creator of [ElBruno.LocalLLMs](https://github.com/elbruno/ElBruno.LocalLLMs) — a .NET library for running local language models with zero cloud dependencies.
+
+- 📝 **Blog**: [elbruno.com](https://elbruno.com)
+- 🔗 **LinkedIn**: [linkedin.com/in/elbruno](https://linkedin.com/in/elbruno)
+- 𝕏 **Twitter**: [@elbruno](https://twitter.com/elbruno)
+- 📺 **YouTube**: [youtube.com/elbruno](https://youtube.com/elbruno)
