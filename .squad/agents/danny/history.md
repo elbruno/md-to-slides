@@ -9,6 +9,15 @@
 
 - The first milestone is a focused skill that outputs a polished HTML deck from a talk brief.
 - Reference repos show two useful patterns: a real Reveal.js deck and session packaging that always includes `slides.html`.
+- **CLI Architecture (2026-04-22):**
+  - **Framework:** `commander.js` v12+ chosen over oclif (lightweight, proven, no vendor lock-in)
+  - **Commands:** Modular structure (init, update, doctor, --version) in separate files; shared libs for paths/validation
+  - **Config:** Home directory (~/.md2slides/config.json) for persistence; per-installation version tracking
+  - **Cross-Platform:** Centralized path logic with Windows long-path support; uses `path.join()` not string concat
+  - **Error Handling:** Three-level logging (error/warn/info), user-friendly messages, atomic updates with rollback
+  - **Version Pinning:** Git tags from GitHub API; default latest; optional specific version; config stores installed version
+  - **Key Pattern:** Backup-before-update ensures no data loss; doctor command detects corruption
+  - **Future Enhancements:** Deferred to Phase 2 (generate, serve commands)
 
 ## Team Status (2026-04-21 08:51)
 
