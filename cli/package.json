@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "github:elbruno/md-to-slides",
+    "url": "git+https://github.com/elbruno/md-to-slides.git",
     "directory": "cli"
   },
   "keywords": [

@@ -18,6 +18,12 @@
   - **Version Pinning:** Git tags from GitHub API; default latest; optional specific version; config stores installed version
   - **Key Pattern:** Backup-before-update ensures no data loss; doctor command detects corruption
   - **Future Enhancements:** Deferred to Phase 2 (generate, serve commands)
+- **npm Publishing & 2FA (2026-04-21):**
+  - npm@latest uses browser-based OAuth flow for login (more secure, but requires manual browser interaction)
+  - 2FA required for publish on accounts with security policies; legacy .npmrc tokens may not have publish bypass
+  - Dry-run validation passes but actual publish blocked until 2FA verified
+  - Two paths to resolve: (1) Complete browser 2FA via `npm login`, or (2) Create automation token with 2FA bypass
+  - Package ready: 7.0 kB tarball, 15 files, clean structure; version 1.2.0 not yet on registry
 
 ## Team Status (2026-04-21 08:51)
 
