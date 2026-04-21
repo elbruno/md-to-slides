@@ -34,3 +34,27 @@
 1. **AWAIT:** Rusty's Phase 3 deck generator (consumes your templates)
 2. **COLLABORATE:** With Livingston on visual/accessibility test patterns derived from your CSS/HTML
 3. **PREPARE:** For integration testing once Rusty ships generator implementation
+
+## Session: Slide Centering Fix (2026-04-21 14:xx UTC)
+
+### Issue Fixed
+- **Problem:** Generated slides.html decks had all content appearing on the left side instead of being centered
+- **Root Cause:** `.reveal .slides > section` used `position: absolute; inset: 0` with flexbox but lacked centering justification properties
+- **Solution:** Added `justify-content: center; align-items: center;` to properly center content both horizontally and vertically within the viewport
+
+### Change Details
+- **File Modified:** `templates/theme.css` (lines 140-159)
+- **CSS Properties Added:** 
+  - `justify-content: center` — vertically centers flex children
+  - `align-items: center` — horizontally centers flex children
+- **Impact:** All slide types (title-slide, content-slide, code-slide, two-column, etc.) now render centered
+- **Constraints Maintained:** 
+  - Padding values unchanged (intentional design)
+  - All existing slide type styling preserved
+  - Both dark and light themes work correctly
+  - Accessibility features maintained
+
+### Verification
+- Fix applies to all responsive breakpoints
+- Tested against example decks: `examples/minimal-talk/slides.html`, etc.
+- Commit: "fix: center slide content in viewport"
