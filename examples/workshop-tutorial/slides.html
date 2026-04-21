@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Building REST APIs with FastAPI</title>
+  <meta name="description" content="Teach participants to build and deploy a production-ready REST API from scratch">
+  <style>
+:root {
+  color-scheme: dark light;
+  --deck-font-sans: "Aptos", "Segoe UI", "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --deck-font-mono: "Cascadia Code", "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  --deck-width: 1600px;
+  --deck-height: 900px;
+  --deck-background: #08111f;
+  --deck-surface: rgba(13, 22, 39, 0.86);
+  --deck-surface-strong: #10203a;
+  --deck-panel: rgba(11, 18, 34, 0.94);
+  --deck-text: #f6fbff;
+  --deck-muted: #97abc2;
+  --deck-accent: #57c7ff;
+  --deck-accent-strong: #0078d4;
+  --deck-accent-soft: rgba(87, 199, 255, 0.18);
+  --deck-secondary: #43d9bd;
+  --deck-warm: #ff8a4c;
+  --deck-border: rgba(151, 171, 194, 0.24);
+  --deck-focus: rgba(87, 199, 255, 0.65);
+  --deck-link: #8fdfff;
+  --deck-link-hover: #c3f0ff;
+  --deck-code-background: #0a1325;
+  --deck-code-text: #d8ecff;
+  --deck-inline-code-background: rgba(143, 223, 255, 0.12);
+  --deck-table-header: rgba(255, 255, 255, 0.05);
+  --deck-shadow: 0 24px 64px rgba(2, 8, 23, 0.38);
+  --deck-radius-sm: 14px;
+  --deck-radius-md: 22px;
+  --deck-radius-lg: 32px;
+  --deck-space-1: 0.35rem;
+  --deck-space-2: 0.65rem;
+  --deck-space-3: 1rem;
+  --deck-space-4: 1.4rem;
+  --deck-space-5: 2rem;
+  --deck-space-6: 2.8rem;
+  --deck-space-7: 4rem;
+  --deck-title-size: clamp(3rem, 5vw, 5.2rem);
+  --deck-h2-size: clamp(2.3rem, 3vw, 3.5rem);
+  --deck-h3-size: clamp(1.4rem, 1.8vw, 2rem);
+  --deck-body-size: clamp(1.15rem, 1.4vw, 1.65rem);
+  --deck-small-size: 1rem;
+  --deck-line-height: 1.28;
+  --deck-gradient-hero: linear-gradient(135deg, #f7fbff 0%, #8fdfff 34%, #57c7ff 60%, #43d9bd 100%);
+  --deck-gradient-accent: linear-gradient(135deg, rgba(87, 199, 255, 0.9), rgba(67, 217, 189, 0.92), rgba(255, 138, 76, 0.88));
+  --deck-gradient-glow:
+    radial-gradient(circle at top left, rgba(87, 199, 255, 0.18), transparent 38%),
+    radial-gradient(circle at bottom right, rgba(67, 217, 189, 0.14), transparent 34%);
+}
+
+[data-theme="light"] {
+  --deck-background: #eef4fb;
+  --deck-surface: rgba(255, 255, 255, 0.92);
+  --deck-surface-strong: #ffffff;
+  --deck-panel: rgba(255, 255, 255, 0.97);
+  --deck-text: #122033;
+  --deck-muted: #54657c;
+  --deck-accent-soft: rgba(0, 120, 212, 0.1);
+  --deck-border: rgba(84, 101, 124, 0.24);
+  --deck-focus: rgba(0, 120, 212, 0.45);
+  --deck-link: #1550af;
+  --deck-link-hover: #0f8f7f;
+  --deck-code-background: #0f172a;
+  --deck-inline-code-background: rgba(15, 23, 42, 0.08);
+  --deck-table-header: rgba(15, 23, 42, 0.04);
+  --deck-shadow: 0 24px 64px rgba(15, 23, 42, 0.14);
+  --deck-gradient-hero: linear-gradient(135deg, #0f172a 0%, #1550af 36%, #0078d4 62%, #0f8f7f 100%);
+  --deck-gradient-accent: linear-gradient(135deg, rgba(0, 120, 212, 0.9), rgba(8, 145, 178, 0.86), rgba(232, 89, 12, 0.8));
+  --deck-gradient-glow:
+    radial-gradient(circle at top left, rgba(0, 120, 212, 0.12), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(8, 145, 178, 0.1), transparent 32%);
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: var(--deck-background);
+  color: var(--deck-text);
+  font-family: var(--deck-font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--deck-accent);
+  color: #08111f;
+}
+
+a {
+  color: var(--deck-link);
+  text-decoration-thickness: 0.12em;
+  text-underline-offset: 0.16em;
+}
+
+a:hover {
+  color: var(--deck-link-hover);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--deck-focus);
+  outline-offset: 3px;
+}
+
+.reveal {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(8, 17, 31, 0.12), rgba(8, 17, 31, 0.35)),
+    var(--deck-gradient-glow),
+    var(--deck-background);
+  isolation: isolate;
+}
+
+.reveal::before {
+  content: "";
+  position: absolute;
+  inset: 1.2rem;
+  border: 1px solid rgba(151, 171, 194, 0.16);
+  border-radius: 36px;
+  pointer-events: none;
+}
+
+[data-theme="light"] .reveal::before {
+  border-color: rgba(84, 101, 124, 0.18);
+}
+
+.reveal .slides {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.reveal .slides > section {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--deck-space-5);
+  box-sizing: border-box;
+  padding: 5rem 5.4rem 5.5rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(18px);
+  transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
+    var(--deck-gradient-glow),
+    transparent;
+}
+
+.reveal .slides > section.present,
+.reveal .slides > section.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.reveal .slides > section::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 5px;
+  background: var(--deck-gradient-accent);
+}
+
+.reveal .slides > section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal p,
+.reveal li,
+.reveal blockquote,
+.reveal figcaption,
+.reveal td,
+.reveal th {
+  margin: 0;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.reveal h1 {
+  font-size: var(--deck-title-size);
+}
+
+.reveal h2 {
+  font-size: var(--deck-h2-size);
+}
+
+.reveal h3 {
+  font-size: var(--deck-h3-size);
+}
+
+.reveal p,
+.reveal li,
+.reveal blockquote,
+.reveal figcaption,
+.reveal td,
+.reveal th {
+  font-size: var(--deck-body-size);
+  line-height: var(--deck-line-height);
+}
+
+.reveal ul,
+.reveal ol {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.reveal li + li {
+  margin-top: 0.45rem;
+}
+
+.reveal strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+[data-theme="light"] .reveal strong {
+  color: #0f172a;
+}
+
+.reveal code:not(pre code) {
+  display: inline-block;
+  padding: 0.12em 0.36em;
+  border-radius: 0.45rem;
+  background: var(--deck-inline-code-background);
+  font-family: var(--deck-font-mono);
+  font-size: 0.9em;
+}
+
+.reveal pre {
+  margin: 0;
+}
+
+.reveal pre code {
+  display: block;
+  overflow: auto;
+  font-family: var(--deck-font-mono);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--deck-code-text);
+  white-space: pre;
+}
+
+.reveal blockquote {
+  max-width: 40ch;
+  padding: 1.2rem 1.35rem;
+  border-left: 4px solid var(--deck-accent);
+  border-radius: var(--deck-radius-sm);
+  background: var(--deck-accent-soft);
+}
+
+.reveal table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid var(--deck-border);
+  border-radius: var(--deck-radius-md);
+  background: var(--deck-surface);
+}
+
+.reveal th,
+.reveal td {
+  padding: 0.85rem 0.95rem;
+  border-bottom: 1px solid var(--deck-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.reveal th {
+  background: var(--deck-table-header);
+  font-weight: 700;
+}
+
+.reveal tr:last-child td {
+  border-bottom: 0;
+}
+
+.reveal figure {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.reveal img,
+.reveal svg {
+  display: block;
+  max-width: 100%;
+  max-height: 52vh;
+  border-radius: var(--deck-radius-md);
+  box-shadow: var(--deck-shadow);
+  object-fit: contain;
+}
+
+.reveal hr {
+  width: 100%;
+  height: 1px;
+  border: 0;
+  background: var(--deck-border);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--deck-muted);
+}
+
+.eyebrow::before {
+  content: "";
+  width: 2.4rem;
+  height: 0.2rem;
+  border-radius: 999px;
+  background: var(--deck-gradient-accent);
+}
+
+.lede {
+  max-width: 26ch;
+  font-size: clamp(1.4rem, 1.8vw, 2rem);
+  color: var(--deck-muted);
+}
+
+.muted {
+  color: var(--deck-muted);
+}
+
+.flow-stack {
+  display: grid;
+  gap: var(--deck-space-4);
+  align-content: start;
+}
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid var(--deck-border);
+  background: var(--deck-accent-soft);
+  font-size: 0.95rem;
+  color: var(--deck-text);
+}
+
+.surface {
+  border: 1px solid var(--deck-border);
+  border-radius: var(--deck-radius-md);
+  background: var(--deck-surface);
+  box-shadow: var(--deck-shadow);
+}
+
+.slide-heading {
+  display: grid;
+  gap: var(--deck-space-3);
+  max-width: 24ch;
+}
+
+.split-layout {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: var(--deck-space-5);
+  align-items: stretch;
+  min-height: 0;
+}
+
+.split-layout > * {
+  min-width: 0;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--deck-space-4);
+}
+
+.card {
+  padding: 1.4rem 1.5rem;
+  border: 1px solid var(--deck-border);
+  border-radius: var(--deck-radius-md);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent), var(--deck-surface);
+}
+
+.card h3 {
+  margin-bottom: 0.6rem;
+}
+
+.card p {
+  color: var(--deck-muted);
+  font-size: 1.05rem;
+}
+
+.checklist {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.checklist li {
+  position: relative;
+  padding-left: 1.8rem;
+}
+
+.checklist li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: -0.03em;
+  color: var(--deck-secondary);
+  font-size: 1.2em;
+}
+
+.metric-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.metric {
+  padding: 1.15rem 1.2rem;
+  border-radius: var(--deck-radius-sm);
+  border: 1px solid var(--deck-border);
+  background: var(--deck-panel);
+}
+
+.metric strong {
+  display: block;
+  font-size: 2rem;
+  margin-bottom: 0.35rem;
+}
+
+.metric span {
+  color: var(--deck-muted);
+  font-size: 0.95rem;
+}
+
+.callout {
+  padding: 1.4rem 1.5rem;
+  border-left: 4px solid var(--deck-accent);
+  border-radius: var(--deck-radius-sm);
+  background: var(--deck-accent-soft);
+}
+
+.callout p {
+  font-size: 1.1rem;
+}
+
+.code-panel {
+  padding: 1.2rem;
+  border: 1px solid var(--deck-border);
+  border-radius: var(--deck-radius-md);
+  background: var(--deck-code-background);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.speaker-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: max-content;
+  padding: 1rem 1.2rem;
+  border-radius: var(--deck-radius-md);
+  border: 1px solid var(--deck-border);
+  background: rgba(7, 14, 28, 0.55);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--deck-shadow);
+}
+
+[data-theme="light"] .speaker-card {
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.speaker-card .avatar {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 999px;
+  background: var(--deck-gradient-accent);
+  color: #08111f;
+  font-weight: 800;
+}
+
+.speaker-card .meta {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.speaker-card .meta strong {
+  font-size: 1.05rem;
+}
+
+.speaker-card .meta span {
+  font-size: 0.95rem;
+  color: var(--deck-muted);
+}
+
+.title-slide {
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.title-slide h1 {
+  max-width: 10ch;
+  background: var(--deck-gradient-hero);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.title-slide .hero-block {
+  display: grid;
+  gap: var(--deck-space-4);
+  max-width: 20ch;
+}
+
+.title-slide .speaker-card {
+  margin-top: var(--deck-space-2);
+}
+
+.section-divider,
+.demo-transition,
+.closing-slide {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.section-divider .slide-heading,
+.demo-transition .slide-heading,
+.closing-slide .slide-heading {
+  justify-items: center;
+  max-width: 20ch;
+}
+
+.section-divider h2,
+.demo-transition h2,
+.closing-slide h2 {
+  background: var(--deck-gradient-hero);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.section-divider .surface,
+.closing-panel {
+  max-width: 60rem;
+}
+
+.content-slide {
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.content-slide .slide-heading,
+.two-column .slide-heading,
+.code-slide .slide-heading {
+  max-width: 26ch;
+}
+
+.demo-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1.1rem;
+  border-radius: 999px;
+  background: var(--deck-gradient-accent);
+  color: #08111f;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.92rem;
+}
+
+.closing-panel {
+  display: grid;
+  gap: var(--deck-space-4);
+  padding: 1.8rem 2rem;
+  border: 1px solid var(--deck-border);
+  border-radius: var(--deck-radius-lg);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent), var(--deck-surface);
+  box-shadow: var(--deck-shadow);
+}
+
+.closing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.9rem;
+}
+
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 10rem;
+  padding: 0.9rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: var(--deck-gradient-accent);
+  color: #08111f;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.button-link.secondary {
+  border-color: var(--deck-border);
+  background: var(--deck-surface);
+  color: var(--deck-text);
+}
+
+.fragment {
+  opacity: 0.3;
+  transform: translateY(10px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.fragment.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+aside.notes {
+  display: none !important;
+}
+
+.deck-chrome {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.7rem 0.55rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid var(--deck-border);
+  background: rgba(8, 17, 31, 0.54);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--deck-shadow);
+}
+
+[data-theme="light"] .deck-chrome {
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.deck-status {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--deck-muted);
+  font-size: 0.92rem;
+}
+
+.deck-status strong {
+  color: var(--deck-text);
+  font-size: 0.95rem;
+}
+
+.deck-button {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  background: var(--deck-surface);
+  color: var(--deck-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.deck-button[aria-pressed="true"] {
+  border-color: var(--deck-border);
+  background: var(--deck-accent-soft);
+}
+
+.deck-progress {
+  position: absolute;
+  inset: auto 0 0;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.deck-progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--deck-gradient-accent);
+  transition: width 180ms ease;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal .slides > section,
+  .fragment,
+  .deck-progress span {
+    transition: none;
+  }
+}
+
+@media (max-width: 1200px) {
+  .reveal::before {
+    inset: 0.85rem;
+    border-radius: 28px;
+  }
+
+  .reveal .slides > section {
+    padding: 4.2rem 4.2rem 4.8rem;
+  }
+
+  .split-layout,
+  .card-grid,
+  .metric-strip {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .reveal .slides > section {
+    padding: 4rem 2.4rem 4.75rem;
+  }
+
+  .deck-chrome {
+    left: 1rem;
+    right: 1rem;
+    justify-content: space-between;
+  }
+
+  .deck-status {
+    min-width: 0;
+  }
+
+  .deck-status strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media print {
+  body {
+    overflow: visible;
+  }
+
+  .reveal::before,
+  .deck-chrome,
+  .deck-progress {
+    display: none !important;
+  }
+
+  .reveal .slides > section {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+    min-height: 100vh;
+    page-break-after: always;
+  }
+}
+
+
+  </style>
+  <!--
+  
+  -->
+</head>
+<body data-theme="dark">
+  <div class="reveal" data-deck-title="Building REST APIs with FastAPI">
+    <div class="deck-chrome" aria-label="Presentation status and controls">
+      <div class="deck-status">
+        <strong>Building REST APIs with FastAPI</strong>
+        <span id="slide-counter" aria-live="polite">1 / 1</span>
+      </div>
+      <button class="deck-button" id="theme-toggle" type="button" aria-label="Toggle theme">Dark</button>
+      <button class="deck-button" id="speaker-view" type="button" aria-label="Open speaker notes">Notes</button>
+    </div>
+
+    <div class="slides">
+          <section class="title-slide">
+      <div class="flow-stack">
+<h1>Building REST APIs with FastAPI</h1>
+<p>
+A hands-on workshop for Python developers
+</p>
+<ul><li>Jordan Kim</li><li>Senior Backend Engineer</li><li>Python Web Development Workshop</li></ul>
+      </div>
+<aside class="notes"><ul><li>Welcome everyone, quick intro</li><li>Check: who has Python experience? Who has built APIs before?</li><li>Set expectations: hands-on, we'll build a real API together</li><li>Link to workshop repo will be shared in chat</li></ul></aside>
+    </section>
+
+    <section class="content-slide">
+      <div class="flow-stack">
+<h1>What You'll Learn Today</h1>
+<ul><li>FastAPI fundamentals and why it's powerful</li><li>Building CRUD endpoints with path and query parameters</li><li>Request validation with Pydantic models</li><li>Database integration with SQLAlchemy</li><li>Authentication and authorization basics</li><li>Testing your API with pytest</li><li>Deployment to production</li></ul>
+      </div>
+<aside class="notes"><ul><li>This is the roadmap, keep it visible</li><li>We'll cover a lot but focus on practical patterns</li><li>Code repo has all examples and exercises</li><li>Breaks at 30 and 60 minute marks</li></ul></aside>
+    </section>
+
+    <section class="content-slide">
+      <div class="flow-stack">
+<h1>Workshop Prerequisites</h1>
+<strong>Required:</strong>
+<ul><li>Python 3.9+ installed</li><li>Basic Python knowledge (functions, classes, decorators)</li><li>Text editor or IDE (VS Code recommended)</li>
+<strong>Helpful but not required:</strong>
+<li>Experience with HTTP and REST concepts</li><li>Basic SQL understanding</li></ul>
+<strong>Setup:</strong> Clone workshop repo and install dependencies
+      </div>
+<aside class="notes"><ul><li>Quick environment check: ask who needs help with setup</li><li>Share repo link again</li><li>Give 5 minutes for setup if needed</li><li>Dependencies: fastapi, uvicorn, sqlalchemy, pydantic, pytest</li></ul></aside>
+    </section>
+
+    <section class="content-slide">
+      <div class="flow-stack">
+<h1>Why FastAPI?</h1>
+<ul><li><strong>Fast:</strong> High performance, comparable to Node.js and Go</li><li><strong>Easy:</strong> Intuitive API design, great docs</li><li><strong>Standards-based:</strong> OpenAPI, JSON Schema built-in</li><li><strong>Type-safe:</strong> Leverage Python type hints for validation</li><li><strong>Async-ready:</strong> Native async/await support</li></ul>
+      </div>
+<aside class="notes"><ul><li>FastAPI has exploded in popularity since 2019</li><li>Used by Microsoft, Netflix, Uber in production</li><li>Type hints aren't just for IDEs - FastAPI uses them for validation</li><li>We'll see OpenAPI docs auto-generated from our code</li></ul></aside>
+    </section>
+
+    <section class="code-slide">
+      <div class="flow-stack">
+<h1>Hello World API</h1>
+<div class="code-panel"><pre><code class="language-python">from fastapi import FastAPI
+<p>
+app = FastAPI()
+</p>
+<p>
+@app.get("/")
+def read_root():
+    return {"message": "Hello, World!"}
+</p>
+<p>
+@app.get("/items/{item_id}")
+def read_item(item_id: int, q: str = None):
+    return {"item_id": item_id, "query": q}
+</p>
+</code></pre></div>
+<p>
+Run with: <code>uvicorn main:app --reload</code>
+</p>
+      </div>
+<aside class="notes"><ul><li>Walk through each line</li><li>Path parameter: item_id is in the URL path</li><li>Query parameter: q is optional, comes after ?</li><li>Type hints: FastAPI validates item_id is an int</li><li>--reload enables hot reloading during development</li></ul></aside>
+    </section>
+
+    <section class="content-slide">
+      <div class="flow-stack">
+<h1>Checkpoint #1: Run Your First API</h1>
+<strong>Exercise (5 minutes):</strong>
+<p>
+1. Create <code>main.py</code> with the Hello World code
+2. Run <code>uvicorn main:app --reload</code>
+3. Visit <code>http://localhost:8000</code> in your browser
+4. Visit <code>http://localhost:8000/docs</code> for interactive API docs
+</p>
+<strong>What to expect:</strong> JSON response and auto-generated Swagger UI
+      </div>
+<aside class="notes"><ul><li>Give participants 5 minutes</li><li>Walk around to help with issues</li><li>The /docs endpoint is magical - FastAPI generates it automatically</li><li>Check: can everyone see the Swagger UI?</li></ul></aside>
+    </section>
+
+    <section class="code-slide">
+      <div class="flow-stack">
+<h1>Pydantic Models for Validation</h1>
+<div class="code-panel"><pre><code class="language-python">from pydantic import BaseModel, Field
+<p>
+from typing import Optional
+</p>
+<p>
+class Item(BaseModel):
+    name: str = Field(..., min_length=1, max_length=100)
+    description: Optional[str] = None
+    price: float = Field(..., gt=0)
+    tax: Optional[float] = None
+</p>
+<p>
+@app.post("/items/")
+def create_item(item: Item):
+    total = item.price + (item.tax or 0)
+    return {"item": item, "total_price": total}
+</p>
+</code></pre></div>
+      </div>
+<aside class="notes"><ul><li>Pydantic handles validation, serialization, and documentation</li><li>Field() adds constraints: min_length, max_length, gt (greater than)</li><li>FastAPI will return 422 for invalid requests</li><li>Try posting invalid data in the Swagger UI to see validation errors</li></ul></aside>
+    </section>
+
+    <section class="content-slide">
+      <div class="flow-stack">
+<h1>Checkpoint #2: Add Data Validation</h1>
+<strong>Exercise (10 minutes):</strong>
+<p>
+1. Define a <code>Book</code> model with title, author, year, and isbn
+2. Add constraints: title required, year between 1000 and 2100
+3. Create a POST endpoint that accepts a Book
+4. Test with valid and invalid data in <code>/docs</code>
+</p>
+<strong>Bonus:</strong> Add a list of tags to the Book model
+      </div>
+<aside class="notes"><ul><li>This reinforces Pydantic models</li><li>Solution is in the repo under checkpoint-2</li><li>Common mistake: forgetting to import Field</li><li>Check: who got 422 validation errors? That's correct behavior!</li></ul></aside>
+    </section>
+
+    <section class="code-slide">
+      <div class="flow-stack">
+<h1>Database Integration with SQLAlchemy</h1>
+<div class="code-panel"><pre><code class="language-python">from sqlalchemy import create_engine, Column, Integer, String
+<p>
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+</p>
+<p>
+DATABASE_URL = "sqlite:///./books.db"
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(bind=engine)
+Base = declarative_base()
+</p>
+<p>
+class BookDB(Base):
+    __tablename__ = "books"
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, index=True)
+    author = Column(String)
+    year = Column(Integer)
+</p>
+</code></pre></div>
+      </div>
+<aside class="notes"><ul><li>SQLAlchemy is the de facto Python ORM</li><li>We're using SQLite for simplicity, but this works with PostgreSQL, MySQL, etc.</li><li>SessionLocal creates database sessions</li><li>Base is the declarative base for ORM models</li><li>We'll separate Pydantic models (API) from SQLAlchemy models (DB)</li></ul></aside>
+    </section>
+
+    <section class="code-slide">
+      <div class="flow-stack">
+<h1>Dependency Injection for Database Sessions</h1>
+<div class="code-panel"><pre><code class="language-python">from fastapi import Depends
+<p>
+from sqlalchemy.orm import Session
+</p>
+<p>
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+</p>
+<p>
+@app.get("/books/")
+def list_books(db: Session = Depends(get_db)):
+    books = db.query(BookDB).all()
+    return books
+</p>
+<p>
+@app.post("/books/")
+def create_book(book: Book, db: Session = Depends(get_db)):
+    db_book = BookDB(**book.dict())
+    db.add(db_book)
+    db.commit()
+    return db_book
+</p>
+</code></pre></div>
+      </div>
+<aside class="notes"><ul><li>Depends() is FastAPI's dependency injection system</li><li>get_db() creates a session, yields it, then closes it</li><li>This pattern ensures proper resource cleanup</li><li>Works great for auth, logging, config, etc.</li></ul></aside>
+    </section>
+
+    <section class="content-slide">
+      <div class="flow-stack">
+<h1>Checkpoint #3: Add Database Persistence</h1>
+<strong>Exercise (15 minutes):</strong>
+<p>
+1. Set up SQLAlchemy with SQLite
+2. Create a database model for books
+3. Implement GET /books/ to list all books
+4. Implement POST /books/ to create a new book
+5. Test CRUD operations in <code>/docs</code>
+</p>
+<strong>Bonus:</strong> Add GET /books/{book_id} to fetch a single book
+      </div>
+<aside class="notes"><ul><li>This is the big one, give participants time</li><li>Solution is in checkpoint-3 folder</li><li>Common issues: forgetting to create tables, session management</li><li>Use Base.metadata.create_all(engine) to create tables</li></ul></aside>
+    </section>
+
+    <section class="content-slide">
+      <div class="flow-stack">
+<h1>HTTP Status Codes Matter</h1>
+<div class="code-panel"><pre><code class="language-python">from fastapi import HTTPException, status
+<p>
+@app.get("/books/{book_id}")
+def get_book(book_id: int, db: Session = Depends(get_db)):
+    book = db.query(BookDB).filter(BookDB.id == book_id).first()
+    if book is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Book {book_id} not found"
+        )
+    return book
+</p>
+</code></pre></div>
+<strong>Common status codes:</strong>
+<ul><li>200 OK, 201 Created, 204 No Content</li><li>400 Bad Request, 401 Unauthorized, 404 Not Found</li><li>500 Internal Server Error</li></ul>
+      </div>
+<aside class="notes"><ul><li>Use correct status codes for better API design</li><li>HTTPException is FastAPI's way to return errors</li><li>status module has constants for all HTTP codes</li><li>Clients rely on status codes for error handling</li></ul></aside>
+    </section>
+
+    <section class="code-slide">
+      <div class="flow-stack">
+<h1>Authentication with JWT</h1>
+<div class="code-panel"><pre><code class="language-python">from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+<p>
+from jose import jwt
+from datetime import datetime, timedelta
+</p>
+<p>
+SECRET_KEY = "your-secret-key-here"
+security = HTTPBearer()
+</p>
+<p>
+def create_token(user_id: int) -&gt; str:
+    payload = {
+        "user_id": user_id,
+        "exp": datetime.utcnow() + timedelta(hours=24)
+    }
+    return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+</p>
+<p>
+def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    try:
+        payload = jwt.decode(credentials.credentials, SECRET_KEY)
+        return payload["user_id"]
+    except:
+        raise HTTPException(status_code=401, detail="Invalid token")
+</p>
+</code></pre></div>
+      </div>
+<aside class="notes"><ul><li>JWT = JSON Web Token, industry standard for API auth</li><li>Token contains claims (user_id, expiration)</li><li>Never commit SECRET_KEY to git, use environment variables</li><li>In production, use a proper secrets manager</li></ul></aside>
+    </section>
+
+    <section class="content-slide">
+      <div class="flow-stack">
+<h1>Checkpoint #4: Add Basic Auth</h1>
+<strong>Exercise (15 minutes):</strong>
+<p>
+1. Install <code>python-jose[cryptography]</code> and <code>passlib[bcrypt]</code>
+2. Create <code>/auth/login</code> endpoint that returns a JWT
+3. Protect <code>/books/</code> POST endpoint with token verification
+4. Test: login to get token, use token to create a book
+</p>
+<strong>Bonus:</strong> Add password hashing with bcrypt
+      </div>
+<aside class="notes"><ul><li>Auth is complex, we're simplifying for the workshop</li><li>Production auth needs: password hashing, refresh tokens, HTTPS</li><li>Solution includes password hashing with bcrypt</li><li>Check: who successfully protected an endpoint?</li></ul></aside>
+    </section>
+
+    <section class="code-slide">
+      <div class="flow-stack">
+<h1>Testing Your API with pytest</h1>
+<div class="code-panel"><pre><code class="language-python">from fastapi.testclient import TestClient
+<p>
+from main import app
+</p>
+<p>
+client = TestClient(app)
+</p>
+<p>
+def test_list_books():
+    response = client.get("/books/")
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
+</p>
+<p>
+def test_create_book():
+    book_data = {
+        "title": "Test Book",
+        "author": "Test Author",
+        "year": 2024
+    }
+    response = client.post("/books/", json=book_data)
+    assert response.status_code == 200
+    assert response.json()["title"] == "Test Book"
+</p>
+</code></pre></div>
+      </div>
+<aside class="notes"><ul><li>TestClient simulates HTTP requests without running a server</li><li>Write tests alongside your code, not after</li><li>Test happy paths and error cases</li><li>Use fixtures for test data and database setup</li></ul></aside>
+    </section>
+
+    <section class="content-slide">
+      <div class="flow-stack">
+<h1>Checkpoint #5: Write Tests</h1>
+<strong>Exercise (10 minutes):</strong>
+<p>
+1. Create <code>test_main.py</code>
+2. Write tests for GET /books/ and POST /books/
+3. Run tests with <code>pytest</code>
+4. Aim for 100% coverage of your endpoints
+</p>
+<strong>Bonus:</strong> Test error cases (404, 422 validation errors)
+      </div>
+<aside class="notes"><ul><li>Testing is not optional in production APIs</li><li>pytest makes testing Python code easy</li><li>Use pytest-cov for coverage reports</li><li>Solution has examples of fixture usage</li></ul></aside>
+    </section>
+
+    <section class="content-slide">
+      <div class="flow-stack">
+<h1>API Best Practices</h1>
+<ul><li><strong>Versioning:</strong> Use <code>/api/v1/</code> prefix for future compatibility</li><li><strong>Rate Limiting:</strong> Prevent abuse with request limits</li><li><strong>CORS:</strong> Configure for browser-based clients</li><li><strong>Documentation:</strong> Keep API docs updated (FastAPI does this!)</li><li><strong>Logging:</strong> Log requests, errors, and performance metrics</li><li><strong>Monitoring:</strong> Track API health and usage patterns</li></ul>
+      </div>
+<aside class="notes"><ul><li>These are production concerns, not just workshop exercises</li><li>FastAPI has middleware for CORS and rate limiting</li><li>Structured logging with tools like structlog</li><li>Monitoring with tools like Prometheus, Datadog, Sentry</li></ul></aside>
+    </section>
+
+    <section class="content-slide">
+      <div class="flow-stack">
+<h1>Deployment Options</h1>
+<strong>Development:</strong>
+<ul><li><code>uvicorn main:app --reload</code></li>
+<strong>Production:</strong>
+<li><strong>Docker:</strong> Containerize with official Python image</li><li><strong>Cloud Platforms:</strong> Heroku, AWS Lambda, Google Cloud Run, Azure App Service</li><li><strong>Traditional VPS:</strong> Ubuntu + nginx + systemd + uvicorn workers</li></ul>
+<strong>Key considerations:</strong> HTTPS, environment variables, process management
+      </div>
+<aside class="notes"><ul><li>Never run with --reload in production</li><li>Use multiple uvicorn workers for concurrency</li><li>Docker is the easiest path to production</li><li>HTTPS is mandatory, use Let's Encrypt for free certs</li></ul></aside>
+    </section>
+
+    <section class="content-slide">
+      <div class="flow-stack">
+<h1>Checkpoint #6: Dockerize Your API</h1>
+<strong>Exercise (15 minutes):</strong>
+<p>
+1. Create a <code>Dockerfile</code> for your API
+2. Build the Docker image
+3. Run the container and test the API
+4. Check: can you access the API from your host machine?
+</p>
+<strong>Starter Dockerfile provided in the repo</strong>
+      </div>
+<aside class="notes"><ul><li>Docker isn't scary, it's just a way to package your app</li><li>Dockerfile in repo uses multi-stage build for small images</li><li>Common issue: exposing the port with EXPOSE and -p flag</li><li>Solution includes docker-compose for local development</li></ul></aside>
+    </section>
+
+    <section class="content-slide">
+      <div class="flow-stack">
+<h1>Additional Resources</h1>
+<strong>FastAPI Docs:</strong> https://fastapi.tiangolo.com
+<strong>Workshop Repo:</strong> github.com/jordankim/fastapi-workshop
+<strong>SQLAlchemy Tutorial:</strong> docs.sqlalchemy.org/tutorial
+<strong>Pytest Guide:</strong> docs.pytest.org
+<strong>JWT Spec:</strong> jwt.io
+<strong>Next steps:</strong>
+<ul><li>Add pagination to list endpoints</li><li>Implement filtering and sorting</li><li>Add background tasks with Celery</li><li>Set up CI/CD for automated deployments</li></ul>
+      </div>
+<aside class="notes"><ul><li>All resources will be in the workshop repo README</li><li>Encourage participants to explore FastAPI docs</li><li>Next level: async database queries, GraphQL, WebSockets</li><li>Community: FastAPI Discord is very active</li></ul></aside>
+    </section>
+
+    <section class="content-slide">
+      <div class="flow-stack">
+<h1>Review: What We Built</h1>
+<p>
+✓ FastAPI application with multiple endpoints
+✓ Pydantic models for request validation
+✓ SQLAlchemy database integration
+✓ JWT authentication
+✓ pytest test suite
+✓ Docker deployment setup
+</p>
+<strong>You now have a production-ready API template!</strong>
+      </div>
+<aside class="notes"><ul><li>Celebrate what we accomplished in 90 minutes</li><li>This is a real foundation for production APIs</li><li>Participants can extend this for their own projects</li><li>Encourage them to build something and share it</li></ul></aside>
+    </section>
+
+    <section class="closing-slide">
+      <div class="flow-stack">
+<h1>Thank You!</h1>
+<strong>Jordan Kim</strong>
+<p>
+jordan@example.com
+GitHub: @jordankim
+</p>
+<strong>Workshop repo:</strong> github.com/jordankim/fastapi-workshop
+<strong>Slides:</strong> github.com/jordankim/fastapi-slides
+<p>
+Questions? Feedback? Let's chat!
+</p>
+      </div>
+<aside class="notes"><ul><li>Keep yourself available after for 1:1 questions</li><li>Share contact info for follow-ups</li><li>Ask for feedback: what worked, what didn't</li><li>Thank the organizers and participants</li></ul></aside>
+    </section>
+      <!--
+      Keep slides human-editable and Reveal-friendly:
+      <section class="content-slide two-column">
+        <div class="slide-heading">
+          <p class="eyebrow">Section label</p>
+          <h2>Slide title</h2>
+          <p class="lede">Short framing sentence for the room.</p>
+        </div>
+        <div class="split-layout">
+          <div class="flow-stack">Visible content</div>
+          <div class="flow-stack">Proof, metrics, or code</div>
+        </div>
+        <aside class="notes">
+          Speaker notes stay in the deck and open in presenter view.
+        </aside>
+      </section>
+      -->
+    </div>
+
+    <div class="deck-progress" aria-hidden="true">
+      <span id="deck-progress-bar"></span>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.querySelector(".reveal");
+      if (!root) {
+        return;
+      }
+
+      const slidesContainer = root.querySelector(".slides");
+      const progressBar = document.getElementById("deck-progress-bar");
+      const counter = document.getElementById("slide-counter");
+      const themeToggle = document.getElementById("theme-toggle");
+      const speakerButton = document.getElementById("speaker-view");
+      const notesWindowName = "presentation-speaker-view";
+      const storageKey = "presentation-skill-theme";
+      const eventHandlers = new Map();
+      const defaultConfig = {
+        controls: false,
+        progress: true,
+        hash: true,
+        keyboard: true,
+        center: false,
+        slideNumber: true
+      };
+      const state = {
+        bound: false,
+        config: { ...defaultConfig },
+        currentIndex: 0,
+        initialized: false,
+        notesTimer: null,
+        notesWindow: null,
+        slides: [],
+        startTime: Date.now()
+      };
+
+      if (!slidesContainer) {
+        return;
+      }
+
+      function getSlides() {
+        return Array.from(slidesContainer.children).filter(child => child.tagName === "SECTION");
+      }
+
+      function safeStorageGet(key) {
+        try {
+          return window.localStorage ? window.localStorage.getItem(key) : null;
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function safeStorageSet(key, value) {
+        try {
+          if (window.localStorage) {
+            window.localStorage.setItem(key, value);
+          }
+        } catch (error) {
+          // Ignore storage errors. The deck still works without persistence.
+        }
+      }
+
+      function getSlideTitle(slide) {
+        const heading = slide ? slide.querySelector("h1, h2, h3") : null;
+        return heading ? heading.textContent.trim() : "Untitled slide";
+      }
+
+      function getNotesMarkup(slide) {
+        const notes = slide ? slide.querySelector("aside.notes") : null;
+        return notes ? notes.innerHTML.trim() : "<p>No presenter notes for this slide.</p>";
+      }
+
+      function fragmentsFor(slide) {
+        return slide ? Array.from(slide.querySelectorAll(".fragment")) : [];
+      }
+
+      function visibleFragmentCount(slide) {
+        return fragmentsFor(slide).filter(fragment => fragment.classList.contains("visible")).length;
+      }
+
+      function emit(name, detail) {
+        const handlers = eventHandlers.get(name) || [];
+        handlers.forEach(handler => {
+          try {
+            handler(detail);
+          } catch (error) {
+            console.error(error);
+          }
+        });
+        root.dispatchEvent(new CustomEvent(name, { detail }));
+      }
+
+      function updateThemeButton() {
+        if (!themeToggle) {
+          return;
+        }
+        const currentTheme = document.body.dataset.theme === "light" ? "light" : "dark";
+        const nextTheme = currentTheme === "light" ? "dark" : "light";
+        themeToggle.textContent = currentTheme === "light" ? "Light" : "Dark";
+        themeToggle.setAttribute("aria-pressed", currentTheme === "light" ? "true" : "false");
+        themeToggle.setAttribute("aria-label", `Switch to ${nextTheme} theme`);
+      }
+
+      function setTheme(mode, persist = true) {
+        const nextTheme = mode === "light" ? "light" : "dark";
+        document.body.dataset.theme = nextTheme;
+        if (persist) {
+          safeStorageSet(storageKey, nextTheme);
+        }
+        updateThemeButton();
+        renderNotesWindow();
+        emit("themechanged", { theme: nextTheme });
+      }
+
+      function toggleTheme() {
+        setTheme(document.body.dataset.theme === "light" ? "dark" : "light");
+      }
+
+      function updateChrome() {
+        const total = state.slides.length || 1;
+        const currentSlide = state.slides[state.currentIndex] || null;
+        if (counter) {
+          counter.textContent = `${state.currentIndex + 1} / ${total}`;
+          counter.setAttribute("aria-label", `Slide ${state.currentIndex + 1} of ${total}: ${getSlideTitle(currentSlide)}`);
+        }
+        if (progressBar) {
+          const percent = total === 1 ? 100 : (state.currentIndex / (total - 1)) * 100;
+          progressBar.style.width = state.config.progress ? `${percent}%` : "0%";
+          if (progressBar.parentElement) {
+            progressBar.parentElement.hidden = !state.config.progress;
+          }
+        }
+      }
+
+      function setHash(index) {
+        if (!state.config.hash) {
+          return;
+        }
+        const hash = `#/${index + 1}`;
+        if (window.location.hash === hash) {
+          return;
+        }
+        try {
+          if (history.replaceState) {
+            history.replaceState(null, "", hash);
+            return;
+          }
+        } catch (error) {
+          // Fall back to direct hash updates for file-based decks.
+        }
+        {
+          window.location.hash = hash;
+        }
+      }
+
+      function formatElapsed() {
+        const totalSeconds = Math.max(0, Math.floor((Date.now() - state.startTime) / 1000));
+        const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
+        const seconds = (totalSeconds % 60).toString().padStart(2, "0");
+        return `${minutes}:${seconds}`;
+      }
+
+      function speakerThemeCss(mode) {
+        if (mode === "light") {
+          return [
+            "body{margin:0;font-family:Segoe UI,Aptos,Arial,sans-serif;background:#f8fafc;color:#122033;}",
+            "main{min-height:100vh;display:grid;grid-template-columns:1.1fr .9fr;}",
+            "section,aside{padding:28px 32px;}",
+            "section{border-right:1px solid rgba(84,101,124,.22);background:#ffffff;}",
+            "aside{display:grid;gap:18px;align-content:start;background:#eef4fb;}",
+            "p{margin:0;line-height:1.45;}",
+            "h1{margin:0 0 18px;font-size:34px;line-height:1.05;}",
+            ".label{margin:0 0 8px;color:#1550af;text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;}",
+            ".value{font-size:22px;}",
+            ".notes{font-size:20px;line-height:1.5;}",
+            ".meta{font-size:18px;color:#54657c;}",
+            "code{font-family:Cascadia Code,Consolas,monospace;background:rgba(15,23,42,.06);padding:.12em .32em;border-radius:6px;}"
+          ].join("");
+        }
+        return [
+          "body{margin:0;font-family:Segoe UI,Aptos,Arial,sans-serif;background:#0f172a;color:#f8fafc;}",
+          "main{min-height:100vh;display:grid;grid-template-columns:1.1fr .9fr;}",
+          "section,aside{padding:28px 32px;}",
+          "section{border-right:1px solid rgba(148,163,184,.2);background:#111c31;}",
+          "aside{display:grid;gap:18px;align-content:start;background:#0b1323;}",
+          "p{margin:0;line-height:1.45;}",
+          "h1{margin:0 0 18px;font-size:34px;line-height:1.05;}",
+          ".label{margin:0 0 8px;color:#7dd3fc;text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;}",
+          ".value{font-size:22px;}",
+          ".notes{font-size:20px;line-height:1.5;}",
+          ".meta{font-size:18px;color:#cbd5e1;}",
+          "code{font-family:Cascadia Code,Consolas,monospace;background:rgba(148,163,184,.14);padding:.12em .32em;border-radius:6px;}"
+        ].join("");
+      }
+
+      function ensureNotesWindow() {
+        if (!state.notesWindow || state.notesWindow.closed) {
+          return false;
+        }
+
+        const doc = state.notesWindow.document;
+        if (doc.getElementById("speaker-current-title")) {
+          return true;
+        }
+
+        doc.write(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Speaker view</title>
+  <style id="speaker-theme"></style>
+</head>
+<body>
+  <main>
+    <section>
+      <p class="label">Current slide</p>
+      <h1 id="speaker-current-title"></h1>
+      <div id="speaker-current-notes" class="notes"></div>
+    </section>
+    <aside>
+      <div>
+        <p class="label">Deck status</p>
+        <p id="speaker-slide-count" class="value"></p>
+      </div>
+      <div>
+        <p class="label">Elapsed</p>
+        <p id="speaker-elapsed" class="value"></p>
+      </div>
+      <div>
+        <p class="label">Up next</p>
+        <p id="speaker-next-title" class="value"></p>
+      </div>
+      <div>
+        <p class="label">Fragments</p>
+        <p id="speaker-fragments" class="meta"></p>
+      </div>
+      <div>
+        <p class="label">Shortcuts</p>
+        <p class="meta">Arrow keys move, <code>S</code> opens notes, <code>T</code> toggles theme, <code>F</code> toggles fullscreen.</p>
+      </div>
+    </aside>
+  </main>
+</body>
+</html>`);
+        doc.close();
+        return true;
+      }
+
+      function renderNotesWindow() {
+        if (!ensureNotesWindow()) {
+          return;
+        }
+
+        const doc = state.notesWindow.document;
+        const currentSlide = state.slides[state.currentIndex] || null;
+        const nextSlide = state.slides[state.currentIndex + 1] || null;
+        doc.getElementById("speaker-theme").textContent = speakerThemeCss(document.body.dataset.theme === "light" ? "light" : "dark");
+        doc.getElementById("speaker-current-title").textContent = getSlideTitle(currentSlide);
+        doc.getElementById("speaker-current-notes").innerHTML = getNotesMarkup(currentSlide);
+        doc.getElementById("speaker-slide-count").textContent = `Slide ${state.currentIndex + 1} of ${state.slides.length}`;
+        doc.getElementById("speaker-elapsed").textContent = formatElapsed();
+        doc.getElementById("speaker-next-title").textContent = nextSlide ? getSlideTitle(nextSlide) : "End of deck";
+        doc.getElementById("speaker-fragments").textContent = `${visibleFragmentCount(currentSlide)} revealed of ${fragmentsFor(currentSlide).length}`;
+        doc.title = `${getSlideTitle(currentSlide)} — speaker view`;
+      }
+
+      function ensureNotesTimer() {
+        if (state.notesTimer) {
+          return;
+        }
+        state.notesTimer = window.setInterval(() => {
+          if (!state.notesWindow || state.notesWindow.closed) {
+            window.clearInterval(state.notesTimer);
+            state.notesTimer = null;
+            state.notesWindow = null;
+            return;
+          }
+          renderNotesWindow();
+        }, 1000);
+      }
+
+      function openSpeakerWindow() {
+        state.notesWindow = window.open("", notesWindowName, "width=1280,height=720");
+        if (!state.notesWindow) {
+          return;
+        }
+        ensureNotesWindow();
+        ensureNotesTimer();
+        renderNotesWindow();
+      }
+
+      function revealNextFragment(slide) {
+        const nextFragment = fragmentsFor(slide).find(fragment => !fragment.classList.contains("visible"));
+        if (!nextFragment) {
+          return false;
+        }
+        nextFragment.classList.add("visible");
+        emit("fragmentshown", { fragment: nextFragment, slide });
+        renderNotesWindow();
+        return true;
+      }
+
+      function hideLastFragment(slide) {
+        const visibleFragments = fragmentsFor(slide).filter(fragment => fragment.classList.contains("visible"));
+        const lastFragment = visibleFragments[visibleFragments.length - 1];
+        if (!lastFragment) {
+          return false;
+        }
+        lastFragment.classList.remove("visible");
+        emit("fragmenthidden", { fragment: lastFragment, slide });
+        renderNotesWindow();
+        return true;
+      }
+
+      function goTo(index, options = {}) {
+        const previousSlide = state.slides[state.currentIndex] || null;
+        const boundedIndex = Math.max(0, Math.min(index, state.slides.length - 1));
+        state.currentIndex = boundedIndex;
+
+        state.slides.forEach((slide, slideIndex) => {
+          slide.classList.toggle("present", slideIndex === boundedIndex);
+          slide.classList.toggle("is-active", slideIndex === boundedIndex);
+          slide.classList.toggle("past", slideIndex < boundedIndex);
+          slide.classList.toggle("future", slideIndex > boundedIndex);
+          slide.setAttribute("aria-hidden", slideIndex === boundedIndex ? "false" : "true");
+          slide.setAttribute("data-slide-number", String(slideIndex + 1));
+          slide.setAttribute("role", "group");
+          slide.setAttribute("aria-label", `Slide ${slideIndex + 1} of ${state.slides.length}: ${getSlideTitle(slide)}`);
+          if (slideIndex !== boundedIndex && !options.preserveFragments) {
+            fragmentsFor(slide).forEach(fragment => fragment.classList.remove("visible"));
+          }
+        });
+
+        if (!options.skipHash) {
+          setHash(boundedIndex);
+        }
+        updateChrome();
+        renderNotesWindow();
+        emit("slidechanged", {
+          currentSlide: state.slides[boundedIndex] || null,
+          indexh: boundedIndex,
+          previousSlide
+        });
+      }
+
+      function next() {
+        if (revealNextFragment(state.slides[state.currentIndex])) {
+          return;
+        }
+        goTo(state.currentIndex + 1);
+      }
+
+      function prev() {
+        if (hideLastFragment(state.slides[state.currentIndex])) {
+          return;
+        }
+        goTo(state.currentIndex - 1);
+      }
+
+      function startFromHash() {
+        const match = window.location.hash.match(/^#\/(\d+)(?:\/(\d+))?$/);
+        return match ? Math.max(0, Math.min(parseInt(match[1], 10) - 1, state.slides.length - 1)) : 0;
+      }
+
+      function handleKeydown(event) {
+        if (!state.config.keyboard || event.altKey || event.ctrlKey || event.metaKey) {
+          return;
+        }
+
+        const target = event.target;
+        if (target && /^(INPUT|TEXTAREA|SELECT)$/i.test(target.tagName)) {
+          return;
+        }
+
+        switch (event.key) {
+          case "ArrowRight":
+          case "PageDown":
+          case " ":
+          case "j":
+          case "J":
+          case "n":
+          case "N":
+            event.preventDefault();
+            next();
+            break;
+          case "ArrowLeft":
+          case "PageUp":
+          case "k":
+          case "K":
+          case "p":
+          case "P":
+            event.preventDefault();
+            prev();
+            break;
+          case "Home":
+            event.preventDefault();
+            goTo(0);
+            break;
+          case "End":
+            event.preventDefault();
+            goTo(state.slides.length - 1);
+            break;
+          case "f":
+          case "F":
+            event.preventDefault();
+            if (document.fullscreenElement) {
+              document.exitFullscreen();
+            } else {
+              document.documentElement.requestFullscreen?.();
+            }
+            break;
+          case "s":
+          case "S":
+            event.preventDefault();
+            openSpeakerWindow();
+            break;
+          case "t":
+          case "T":
+            event.preventDefault();
+            toggleTheme();
+            break;
+          default:
+            break;
+        }
+      }
+
+      function bindEventsOnce() {
+        if (state.bound) {
+          return;
+        }
+        window.addEventListener("hashchange", () => goTo(startFromHash(), { skipHash: true }));
+        document.addEventListener("keydown", handleKeydown);
+        themeToggle?.addEventListener("click", toggleTheme);
+        speakerButton?.addEventListener("click", openSpeakerWindow);
+        state.bound = true;
+      }
+
+      const api = {
+        initialize(options = {}) {
+          state.config = { ...defaultConfig, ...state.config, ...options };
+          state.slides = getSlides();
+          if (!state.slides.length) {
+            return Promise.resolve(api);
+          }
+
+          bindEventsOnce();
+          const storedTheme = safeStorageGet(storageKey);
+          setTheme(storedTheme || document.body.dataset.theme || "dark", false);
+          goTo(startFromHash(), { skipHash: !state.config.hash });
+          root.dataset.ready = "true";
+          if (!state.initialized) {
+            emit("ready", { currentSlide: state.slides[state.currentIndex], indexh: state.currentIndex });
+          }
+          state.initialized = true;
+          return Promise.resolve(api);
+        },
+        configure(options = {}) {
+          state.config = { ...state.config, ...options };
+          updateChrome();
+          return api;
+        },
+        getConfig() {
+          return { ...state.config };
+        },
+        getCurrentSlide() {
+          return state.slides[state.currentIndex] || null;
+        },
+        getIndices() {
+          return {
+            f: visibleFragmentCount(state.slides[state.currentIndex]),
+            h: state.currentIndex,
+            v: 0
+          };
+        },
+        getRevealElement() {
+          return root;
+        },
+        getSlides() {
+          return state.slides.slice();
+        },
+        getTotalSlides() {
+          return state.slides.length;
+        },
+        isReady() {
+          return state.initialized;
+        },
+        layout() {
+          updateChrome();
+          return api;
+        },
+        next,
+        on(name, handler) {
+          const handlers = eventHandlers.get(name) || [];
+          handlers.push(handler);
+          eventHandlers.set(name, handlers);
+          return api;
+        },
+        off(name, handler) {
+          const handlers = eventHandlers.get(name) || [];
+          eventHandlers.set(name, handlers.filter(candidate => candidate !== handler));
+          return api;
+        },
+        prev,
+        slide(index) {
+          if (typeof index === "number") {
+            goTo(index);
+          }
+          return api;
+        },
+        sync() {
+          state.slides = getSlides();
+          goTo(Math.min(state.currentIndex, state.slides.length - 1), { skipHash: !state.config.hash, preserveFragments: true });
+          return api;
+        },
+        toggleTheme
+      };
+
+      window.Reveal = api;
+      api.initialize();
+    })();
+  </script>
+  <!--
+  
+  -->
+</body>
+</html>
