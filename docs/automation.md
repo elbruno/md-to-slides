@@ -4,7 +4,7 @@
 
 The main README no longer carries workflow detail. This page is the place for automation and CI notes.
 
-### Deck Builder workflow
+### Active workflow: Deck Builder
 
 The repository includes `.github/workflows/deck-builder.yml`.
 
@@ -13,7 +13,7 @@ That workflow:
 - triggers on Markdown changes in pushes and pull requests
 - checks out the repository
 - sets up Node.js
-- installs the portable skill files into `.copilot/skills/presentation-skill/`
+- copies the portable skill files into a temporary runner directory
 - detects Markdown files that may need deck generation
 - validates any generated `slides.html` files it finds
 - can commit generated decks on pushes to `main`
@@ -21,16 +21,9 @@ That workflow:
 
 It is a template for automation around agent-driven deck generation, not a replacement for the skill contract itself.
 
-### Squad state sync
+### Removed workflows
 
-The repository also includes `.github/workflows/auto-sync.yml`.
-
-It:
-
-- runs every 6 hours
-- checks for uncommitted changes in `.squad/`
-- commits and pushes if needed
-- skips silently if nothing changed
+Squad-specific automation workflows were removed from `.github/workflows/` to cut unnecessary GitHub Actions minute usage. The repo now keeps only the deck-generation workflow that is still relevant to normal project use.
 
 ## Screenshot generation
 
@@ -60,7 +53,3 @@ This captures the configured preview slide for each example deck at 1920x1080 re
 - Easy to update when examples change
 - Automated via npm scripts
 
-**Squad state sync:**
-- No lost work from forgotten commits
-- Automatic backup of session state
-- Clean commit history with `[skip ci]` flag

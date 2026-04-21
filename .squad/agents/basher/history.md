@@ -244,3 +244,18 @@ Initial npm CLI package scaffolding for `md2slides` command-line tool to enable 
 - ✅ Workflow file committed and pushed to `main`
 - ✅ GitHub `main` now reflects the fixed workflow
 
+## Learnings — Disable Squad GitHub Actions (2026-04-22)
+
+**Task:** Removed low-value squad automation workflows so the repo stops spending Actions minutes on scheduled and label-driven `.squad/` maintenance.
+
+**What changed:**
+- Deleted `.github/workflows/auto-sync.yml` because scheduled `.squad/` backups are not part of the product's normal user path.
+- Deleted `squad-heartbeat.yml`, `squad-issue-assign.yml`, `squad-triage.yml`, and `sync-squad-labels.yml` because they only support squad issue-routing automation.
+- Kept `.github/workflows/deck-builder.yml` as the single active workflow because it still maps to markdown/deck repo usage.
+- Updated `docs/automation.md` so the repo documents the reduced workflow set accurately.
+
+**Verification:**
+- ✅ `npm test` passed before edits
+- ✅ `npm test` passed after edits
+- ✅ GitHub Actions workflow list reduced to the single remaining deck workflow after push
+
