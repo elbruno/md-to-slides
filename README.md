@@ -2,6 +2,11 @@
 
 A skill for GitHub Copilot and Claude Code that turns Markdown presentation outlines into self-contained HTML decks.
 
+[![npm package](https://img.shields.io/npm/v/md-to-slides?style=flat-square)](https://www.npmjs.com/package/md-to-slides)
+[![npm downloads](https://img.shields.io/npm/dm/md-to-slides?style=flat-square)](https://www.npmjs.com/package/md-to-slides)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/elbruno/md-to-slides?style=flat-square)](https://github.com/elbruno/md-to-slides)
+
 ## Getting Started
 
 The package now ships the `md2slides` CLI alongside the skill assets.
